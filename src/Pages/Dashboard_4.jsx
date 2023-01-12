@@ -142,7 +142,7 @@ const Dashboard_4 = () => {
               height={"100%"}
               style={{
                 objectFit: "cover",
-                minWidth: "35vw",
+                minWidth: "31vw",
                 aspectRatio: "16/9",
               }}
             />
