@@ -14,7 +14,6 @@ import DisplayRackAndDummyBox from "../Components/DisplayRackAndDummyBox";
 const Dashboard_4 = () => {
   return (
     <Stack
-      minWidth="100vw"
       minHeight="100vh"
       px={3}
       pb={4}
@@ -31,14 +30,15 @@ const Dashboard_4 = () => {
       <Stack
         mt={5}
         py={3}
-        pl={3}
+        px={3}
         direction="row"
-        minHeight="360px"
+        minHeight="40vh"
+        minWidth={"55vw"}
         gap="16px"
         sx={{
           borderRadius: "10px",
           backgroundColor: "scgGray.gray3",
-          overflow: "hidden",
+          overflowX: "scroll",
         }}
       >
         {/* web cam1  */}
@@ -59,13 +59,20 @@ const Dashboard_4 = () => {
               mt={2}
               direction="row"
               gap={1}
+              flex={1}
               sx={{
                 backgroundColor: "scgGray.gray3",
-                overflow: "hidden",
-                overflowX: "scroll",
               }}
             >
-              <img src={camera_example} />
+              <img
+                src={camera_example}
+                height={"100%"}
+                style={{
+                  objectFit: "cover",
+                  minWidth: "20vw",
+                  aspectRatio: "16/9",
+                }}
+              />
             </Stack>
           </Box>
         </Box>
@@ -88,21 +95,28 @@ const Dashboard_4 = () => {
             <Stack
               mt={2}
               direction="row"
+              flex={1}
               gap={1}
               sx={{
                 backgroundColor: "scgGray.gray3",
-                overflow: "hidden",
-                overflowX: "scroll",
               }}
             >
-              <img src={camera_example} />
+              <img
+                src={camera_example}
+                height={"100%"}
+                style={{
+                  objectFit: "cover",
+                  minWidth: "20vw",
+                  aspectRatio: "16/9",
+                }}
+              />
             </Stack>
           </Box>
         </Box>
         {/* web cam2  */}
 
         {/* AVG system */}
-        <Stack minWidth={425}>
+        <Stack minWidth={"25vw"}>
           <Box minHeight={25} display={"inline-flex"}>
             <img src={truck_loading_icon} width="25px" height="25px" />
             <Typography
@@ -117,26 +131,26 @@ const Dashboard_4 = () => {
           <Stack
             mt={2}
             direction="row"
+            flex={1}
             gap={1}
             sx={{
               backgroundColor: "scgGray.gray3",
-              overflow: "hidden",
-              overflowX: "scroll",
             }}
           >
             <img
               src={agv_example}
-              height={225}
+              height={"100%"}
               style={{
                 objectFit: "cover",
-                minWidth: "425px",
+                minWidth: "35vw",
+                aspectRatio: "16/9",
               }}
             />
           </Stack>
         </Stack>
         {/* AVG system */}
 
-        <Stack minHeight={225} minWidth={250}>
+        <Stack minHeight={225} flex={1} maxWidth={200}>
           <Stack minHeight={25} />
 
           <Stack mt={2} ml={2} gap={2}>
@@ -159,7 +173,7 @@ const Dashboard_4 = () => {
       {/* upper section */}
 
       <Stack
-        mt={5}
+        mt={2}
         py={3}
         pl={3}
         direction="row"
@@ -173,6 +187,7 @@ const Dashboard_4 = () => {
         <Box display="flex">
           <Box
             // minWidth={{ md: "55%", xl: "65%" }}
+            minWidth={"65vw"}
             display="flex"
             flex={2}
             flexDirection="column"

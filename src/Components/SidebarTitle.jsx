@@ -19,17 +19,15 @@ const SidebarTitle = () => {
       sx={{
         borderRadius: "5px",
         backgroundColor: "scgGray.gray4",
-        maxWidth: "100px",
-        maxHeight: "299px",
       }}
     >
       {title.map((t, i) => (
         <Stack
           key={i}
-          py={3}
+          // py={3}
           px={2}
-          minWidth={60}
-          height={i === 3 ? 60 : 40}
+          minWidth={'4vw'}
+          height={i === 3 ? '7vh' : '6vh'}
           alignItems="center"
           justifyContent="center"
           color="#fff"

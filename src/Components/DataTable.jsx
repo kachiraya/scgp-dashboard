@@ -6,7 +6,7 @@ const DataTable = ({ data }) => {
   return (
     <Stack
       direction="row"
-      minHeight={55}
+      minHeight={"7vh"}
       sx={{
         background: data.id % 2 === 0 ? "#fff" : "#F0F0F1",
       }}

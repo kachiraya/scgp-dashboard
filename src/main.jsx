@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import { unstable_createMuiStrictModeTheme } from "@mui/material/styles";
 import { themeConfig } from "./themeConfig";
-import App from "./App";
 import "./index.css";
 import Dashboard_1 from "./Pages/Dashboard_1";
 import Dashboard_2 from "./Pages/Dashboard_2";

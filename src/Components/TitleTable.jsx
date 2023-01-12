@@ -15,7 +15,7 @@ const TitleTable = () => {
   return (
     <Stack
       direction="row"
-      minHeight={55}
+      minHeight={"6vh"}
       sx={{
         background: "#292A31",
       }}

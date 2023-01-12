@@ -16,7 +16,6 @@ import agv_example from "../assets/example/agv-example.png";
 const Dashboard_2 = () => {
   return (
     <Stack
-      minWidth="100vw"
       minHeight="100vh"
       px={3}
       pb={4}
@@ -33,19 +32,16 @@ const Dashboard_2 = () => {
         py={3}
         pl={3}
         direction="row"
-        minHeight="360px"
+        minHeight="45vh"
+        gap="8px"
         sx={{
           borderRadius: "10px",
           backgroundColor: "scgGray.gray3",
-          overflow: "hidden",
+          overflowX: "scroll",
         }}
       >
-        <Box display="flex">
-          <Box
-            minWidth={{ md: "55%", xl: "65%" }}
-            display="flex"
-            flexDirection="column"
-          >
+        <Box display="flex" gap="8px" pr="8px">
+          <Box minWidth={"60vw"} display="flex" flexDirection="column">
             <Box display={"inline-flex"}>
               <img src={table_icon} width="20px" height="20px" />
               <Typography
@@ -72,7 +68,7 @@ const Dashboard_2 = () => {
               <DisplayDataTable />
             </Stack>
           </Box>
-          <Box minWidth={"42%"} ml={1} display="flex" flexDirection="column">
+          <Box display="flex" flexDirection="column">
             <Box display={"inline-flex"}>
               <img src={table_icon} width="20px" height="20px" />
               <Typography
@@ -90,7 +86,6 @@ const Dashboard_2 = () => {
               direction="row"
               sx={{
                 backgroundColor: "scgGray.gray3",
-                flexWrap: "wrap",
               }}
             >
               <DisplayDataTable total />
@@ -115,12 +110,12 @@ const Dashboard_2 = () => {
       {/* upper section */}
       <Stack direction="row" gap={2}>
         <Stack
-          mt={5}
+          mt={2}
           py={3}
           pl={3}
           direction="row"
           minWidth="65%"
-          minHeight="360px"
+          minHeight="40vh"
           sx={{
             borderRadius: "10px",
             backgroundColor: "scgGray.gray3",
@@ -142,12 +137,13 @@ const Dashboard_2 = () => {
               src={wms_example}
               mt={3}
               width={370}
-              height={270}
+              height={"80%"}
               style={{
                 marginTop: "16px",
                 borderRadius: "20px",
                 border: "1px solid #fff",
                 objectFit: "cover",
+                aspectRatio: "16/9",
               }}
             />
           </Stack>
@@ -166,24 +162,26 @@ const Dashboard_2 = () => {
             </Box>
             <img
               src={agv_example}
-              width={370}
-              height={270}
+              // width={370}
+              height={"80%"}
               style={{
                 marginTop: "16px",
                 borderRadius: "20px",
                 border: "1px solid #fff",
                 objectFit: "cover",
+                aspectRatio: "16/9",
               }}
             />
           </Stack>
         </Stack>
 
         <Stack
-          mt={5}
+          mt={2}
           py={3}
           pl={3}
           direction="row"
-          minWidth="33.6%"
+          flex={1}
+          // minWidth="33.6%"
           minHeight="360px"
           sx={{
             borderRadius: "10px",

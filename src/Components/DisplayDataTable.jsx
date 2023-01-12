@@ -2,7 +2,7 @@ import { Stack } from "@mui/system";
 import DisplayDataBox from "./DisplayDataBox";
 import SidebarTitle from "./SidebarTitle";
 
-const DisplayDataTable = ({total}) => {
+const DisplayDataTable = ({ total }) => {
   return (
     <Stack direction="row">
       <SidebarTitle />
@@ -10,26 +10,26 @@ const DisplayDataTable = ({total}) => {
         <DisplayDataBox
           ml={"2px"}
           data="8:00"
-          width={208}
-          height={44}
+          width={"14vw"}
+          height={"6vh"}
           backgroundColor="scgGray.gray2"
         />
         <DisplayDataBox
           ml={"2px"}
           data="7"
-          width={208}
-          height={44}
+          width={"14vw"}
+          height={"6vh"}
           backgroundColor="scgOrange.orange2"
           my="2px"
         />
 
         {/* area */}
-        <Stack width={210} gap="3.8px" direction="row">
+        <Stack width={"14vw"} ml="2px" gap="3.8px" direction="row">
           <DisplayDataBox
-            ml={"1px"}
+            // ml={"1px"}
             data={total ? "FGs" : "Plan"}
             flex={1}
-            height={44}
+            height={"6vh"}
             backgroundColor="scgGray.gray2"
             fonSize={12}
           />
@@ -38,7 +38,7 @@ const DisplayDataTable = ({total}) => {
             data={total ? "Receive" : "Doing"}
             // width={68}
             flex={1}
-            height={44}
+            height={"6vh"}
             backgroundColor="scgGray.gray2"
             fonSize={12}
           />
@@ -47,7 +47,7 @@ const DisplayDataTable = ({total}) => {
             data="Remaining"
             flex={1}
             // width={68}
-            height={44}
+            height={"6vh"}
             backgroundColor="scgGray.gray2"
             fonSize={12}
           />
@@ -55,26 +55,30 @@ const DisplayDataTable = ({total}) => {
         {/* area */}
 
         {/* Conveyor */}
-        <Stack direction="row" my={"2px"} gap="3px">
+        <Stack ml="2px" direction="row" width={"14vw"} my={"1px"} gap="3.8px">
           <DisplayDataBox
             my={"1px"}
             data="7"
             backgroundColor="scgBlue.blue2"
-            height={65}
-            width={68}
+            // height={65}
+            height={"7vh"}
+            // width={68}
+            flex={1}
             color="#DCEDDD"
           />
-          <Stack my={"1px"} gap="1px" justifyContent="space-between">
+          <Stack my={"1px"} flex={1} gap="2px" justifyContent="space-between">
             <DisplayDataBox
               data="5"
-              width={68}
+              // width={68}
+              flex={1}
               height={32}
               backgroundColor={"scgGreen.green2"}
               color="#DCEDDD"
             />
             <DisplayDataBox
               data="5"
-              width={68}
+              // width={68}
+              flex={1}
               height={32}
               backgroundColor={"scgGreen.green2"}
               color="#DCEDDD"
@@ -84,21 +88,24 @@ const DisplayDataTable = ({total}) => {
             my={"1px"}
             data="7"
             backgroundColor="scgRed.red2"
-            height={65}
-            width={68}
+            // height={65}
+            height={"7vh"}
+            // width={68}
+            flex={1}
             color="#DCEDDD"
           />
         </Stack>
         {/* Conveyor */}
 
         {/* dummy */}
-        <Stack width={210} gap="3.8px" direction="row">
+        <Stack ml="2px" width={"14vw"} gap="3.8px" direction="row">
           <DisplayDataBox
             my={"1px"}
             data="7"
             backgroundColor="scgBlue.blue2"
             flex={1}
-            height={44}
+            // height={44}
+            height={"6vh"}
             color="#DCEDDD"
           />
           <DisplayDataBox
@@ -106,7 +113,8 @@ const DisplayDataTable = ({total}) => {
             data="7"
             backgroundColor="scgGreen.green2"
             flex={1}
-            height={44}
+            // height={44}
+            height={"6vh"}
             color="#DCEDDD"
           />
           <DisplayDataBox
@@ -114,20 +122,22 @@ const DisplayDataTable = ({total}) => {
             data="7"
             backgroundColor="scgRed.red2"
             flex={1}
-            height={44}
+            // height={44}
+            height={"6vh"}
             color="#DCEDDD"
           />
         </Stack>
         {/* dummy */}
 
         {/* export */}
-        <Stack width={210} gap="3.8px" direction="row">
+        <Stack ml="2px" width={"14vw"} gap="3.8px" direction="row">
           <DisplayDataBox
             my={"1px"}
             data="7"
             backgroundColor="scgBlue.blue2"
             flex={1}
-            height={44}
+            // height={44}
+            height={"6vh"}
             color="#DCEDDD"
           />
           <DisplayDataBox
@@ -135,7 +145,8 @@ const DisplayDataTable = ({total}) => {
             data="7"
             backgroundColor="scgGreen.green2"
             flex={1}
-            height={44}
+            // height={44}
+            height={"6vh"}
             color="#DCEDDD"
           />
           <DisplayDataBox
@@ -143,7 +154,8 @@ const DisplayDataTable = ({total}) => {
             data="7"
             backgroundColor="scgRed.red2"
             flex={1}
-            height={44}
+            // height={44}
+            height={"6vh"}
             color="#DCEDDD"
           />
         </Stack>
