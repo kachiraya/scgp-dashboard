@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 
-const status = {
+export const status = {
   SUCCESS: {
     backgroundColor: "#A9D3AB",
     color: "#2B662E",

@@ -2,13 +2,13 @@ import { Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import StatusBox from "./StatusBox";
 
-const DataTable = ({ data }) => {
+const DataTable = ({ data, tableId }) => {
   return (
     <Stack
       direction="row"
       minHeight={"7vh"}
       sx={{
-        background: data.id % 2 === 0 ? "#fff" : "#F0F0F1",
+        background: tableId % 2 === 0 ? "#fff" : "#F0F0F1",
       }}
     >
       <Stack
@@ -18,7 +18,7 @@ const DataTable = ({ data }) => {
         alignItems="center"
       >
         <Typography fontSize={18} fontWeight={700}>
-          {data.id}
+          {tableId}
         </Typography>
       </Stack>
       <Stack
