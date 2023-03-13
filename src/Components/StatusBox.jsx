@@ -22,6 +22,11 @@ export const status = {
     color: "#1B4EA3",
     text: "โหลดสินค้า",
   },
+  AVAILABLE: {
+    backgroundColor: "#DCDEE2",
+    color: "#7E7E7E",
+    text: "คิวว่าง",
+  },
 };
 
 const StatusBox = ({ data }) => {
@@ -34,7 +39,7 @@ const StatusBox = ({ data }) => {
       alignItems="center"
       sx={{
         borderRadius: "5px",
-        background: status[data]?.backgroundColor,
+        background: status[data] ? status[data]?.backgroundColor : status.AVAILABLE.backgroundColor,
       }}
     >
       <Box
@@ -42,16 +47,16 @@ const StatusBox = ({ data }) => {
         height={12}
         sx={{
           borderRadius: "50%",
-          background: status[data]?.color,
+          background: status[data] ? status[data]?.color : status.AVAILABLE.color,
         }}
       />
       <Typography
         ml={"6px"}
         fontSize={18}
         fontWeight={700}
-        color={status[data]?.color}
+        color={status[data] ? status[data]?.color : status.AVAILABLE.color}
       >
-        {status[data]?.text}
+        {status[data] ? status[data]?.text : status.AVAILABLE.text}
       </Typography>
     </Stack>
   );

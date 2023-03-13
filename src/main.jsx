@@ -4,6 +4,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import { unstable_createMuiStrictModeTheme } from "@mui/material/styles";
 import { themeConfig } from "./themeConfig";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import Dashboard_1 from "./Pages/Dashboard_1";
 import Dashboard_2 from "./Pages/Dashboard_2";
@@ -35,6 +37,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ThemeProvider theme={themeConfig}>
       <RouterProvider router={router} />
+      <ToastContainer />
     </ThemeProvider>
   </React.StrictMode>
 );

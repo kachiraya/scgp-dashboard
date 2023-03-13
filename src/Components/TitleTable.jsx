@@ -18,6 +18,7 @@ const TitleTable = () => {
       minHeight={"6vh"}
       sx={{
         background: "#292A31",
+        borderRadius: "12px 12px 0px 0px"
       }}
     >
       {titleText.map((title, i) => (

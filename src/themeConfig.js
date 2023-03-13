@@ -34,7 +34,7 @@ export const themeConfig = createTheme({
     },
   },
   typography: {
-    fontFamily: ["Inter", "Roboto", "Arial"].join(","),
+    fontFamily: ["Kanit", "Inter", "Roboto", "Arial"].join(","),
   },
   breakpoints: {
     values: {

@@ -28,7 +28,7 @@ const DataTable = ({ data, tableId }) => {
         alignItems="center"
       >
         <Typography fontSize={18} fontWeight={700}>
-          {data.forkliftNumber}
+          {data.truck_id}
         </Typography>
       </Stack>
       <Stack
@@ -38,7 +38,7 @@ const DataTable = ({ data, tableId }) => {
         alignItems="center"
       >
         <Typography fontSize={18} fontWeight={700}>
-          {data.shipmentNo}
+          {data.shipment_no}
         </Typography>
       </Stack>
       <Stack
@@ -48,7 +48,7 @@ const DataTable = ({ data, tableId }) => {
         alignItems="center"
       >
         <Typography fontSize={18} fontWeight={700}>
-          {data.onGoingTime}
+          {data.picking_date?.start ? data.picking_date?.start : "-"}
         </Typography>
       </Stack>
       <Stack
@@ -58,7 +58,7 @@ const DataTable = ({ data, tableId }) => {
         alignItems="center"
       >
         <Typography fontSize={18} fontWeight={700}>
-          {data.expectedTime}
+          {data.picking_date?.estimate_finish ? data.picking_date?.estimate_finish : "-"}
         </Typography>
       </Stack>
       <Stack
@@ -76,7 +76,7 @@ const DataTable = ({ data, tableId }) => {
         alignItems="center"
       >
         <Typography fontSize={18} fontWeight={700}>
-          {data.destination}
+          {data.location ? data.location : "-"}
         </Typography>
       </Stack>
     </Stack>
