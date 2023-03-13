@@ -1,11 +1,11 @@
 import express from "express";
 import database from "./server.js";
+import bodyParser from "body-parser";
 
 const app = express();
 
-// app.use((request, response) => {
-//   response.json({ message: "Hey! This is your server response!" });
-// });
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.get("/lms-data", (request, response) => {
   var request = new database.Request();
