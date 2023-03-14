@@ -33,8 +33,12 @@ app.get("/lms-data", (request, response) => {
   request.query("select * from V_LMSDATA", function (err, records) {
     if (err) console.log(err);
     console.log(records);
-    const count = records?.rowsAffected[0] ?? 0;
-    const data = records.recordset;
+    if (!records) {
+      console.log("Cannot retrieve record");
+      return;
+    }
+
+    const data = records?.recordset ?? [];
     const averageSetupTime = getAverageSetupTime(data);
     const lmsData = data.map((record) => {
       return {
@@ -51,12 +55,15 @@ app.get("/lms-data", (request, response) => {
         status: getStatus(
           record.STARTPICKING_DATE,
           record.FINISHPICKING,
-          record.Time_arriveWH
+          record.Time_arriveWH,
+          record.Time_exitWH
         ),
         location: `A${record.LOCATION_ID}`,
       };
     });
-    response.json({ count: count, lmsData: lmsData });
+    // filter out records that already exit the warehouse (status > 4 or Time_exitWH exists)
+    const warehouseLMSData = lmsData.filter((record) => { return record.status !== status.COMPLETED })
+    response.json({ count: warehouseLMSData.length, lmsData: warehouseLMSData });
   });
 });
 
@@ -143,10 +150,13 @@ const status = {
   ONGOING: "ONGOING",
   SUCCESS: "SUCCESS",
   LOADING: "LOADING",
+  COMPLETED: "COMPLETED",
 };
 
-const getStatus = (start_picking_date, finish_picking_date, arrive_wh_date) => {
-  if (!start_picking_date && !finish_picking_date) {
+const getStatus = (start_picking_date, finish_picking_date, arrive_wh_date, exit_wh_date, current_status) => {
+  if (current_status || exit_wh_date) {
+    return status.COMPLETED;
+  } else if (!start_picking_date && !finish_picking_date) {
     return status.WAITING;
   } else if (start_picking_date && !finish_picking_date) {
     return status.ONGOING;

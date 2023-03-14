@@ -12,6 +12,8 @@ console.log("API_BASE_URL", API_BASE_URL)
 apiService.interceptors.request.use(
   async (config) => {
     const csrftoken = Cookies.get("csrftoken");
+    axios.defaults.headers.common["Content-Type"] = 'application/x-www-form-urlencoded';
+    axios.defaults.headers.common["Accept"] = 'application/json';
     axios.defaults.headers.common["X-CSRFToken"] = csrftoken;
     return config;
   },

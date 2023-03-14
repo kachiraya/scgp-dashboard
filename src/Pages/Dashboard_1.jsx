@@ -61,7 +61,7 @@ const Dashboard_1 = () => {
 
   const getData = () => {
     apiService
-      .get("http://172.29.159.99:5001/lms-data")
+      .get("http://172.29.159.99:8080/lms-data")
       .then((response) => {
         const responseData = response.data;
         setCount(responseData.count ?? 0);
@@ -70,13 +70,13 @@ const Dashboard_1 = () => {
         setDumpData(lmsData);
 
         if (isError) {
-          showInfoToast("Connection Restored")
+          // showInfoToast("Connection Restored")
           setIsError(false);
         }
       })
       .catch((err) => {
         if (isError) return;
-        showErrorToast(err.message);
+        // showErrorToast(err.message);
         setIsError(true);
       });
   };
