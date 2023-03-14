@@ -1,4 +1,4 @@
-import http from "http";
+import https from "https";
 import app from './app.js';
 
 const normalizePort = val => {
@@ -35,7 +35,7 @@ const normalizePort = val => {
     }
   };
   
-  const server = http.createServer(app);
+  const server = https.createServer(app);
   
   server.on('error', errorHandler);
   server.on('listening', () => {
