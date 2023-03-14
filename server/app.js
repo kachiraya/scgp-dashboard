@@ -40,7 +40,8 @@ app.get("/lms-data", (request, response) => {
 
     const data = records?.recordset ?? [];
     const averageSetupTime = getAverageSetupTime(data);
-    const lmsData = data.map((record) => {
+    const todayLMSData = data.filter((record) => record.SHIPMENTDATE && isToday(record.SHIPMENTDATE))
+    const lmsData = todayLMSData.map((record) => {
       return {
         id: `${record.SHIPMENTNO}-${record.DPNO}`,
         truck_id: record.TRUCKID,
@@ -144,6 +145,21 @@ const formatDateToTimeStr = (date) => {
   const mins = tempDate.getMinutes();
   return `${hours > 10 ? hours : "0" + hours}:${mins > 10 ? mins : "0" + mins}`;
 };
+
+const isToday = (dateStr) => {
+  const date = new Date(dateStr);
+  const today = new Date();
+
+  if (
+    today.getFullYear() === date.getFullYear() &&
+    today.getMonth() === date.getMonth() &&
+    today.getDate() === date.getDate()
+  ) {
+    return true;
+  }
+
+  return false;
+}
 
 const status = {
   WAITING: "WAITING",
