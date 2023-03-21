@@ -27,6 +27,11 @@ export const status = {
     color: "#7E7E7E",
     text: "คิวว่าง",
   },
+  COMPLETED: {
+    backgroundColor: "#AAF0D1",
+    color: "#2B665F",
+    text: "เสร็จสิ้น",
+  },
 };
 
 const StatusBox = ({ data }) => {

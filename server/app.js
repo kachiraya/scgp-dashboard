@@ -40,8 +40,9 @@ app.get("/lms-data", (request, response) => {
 
     const data = records?.recordset ?? [];
     const averageSetupTime = getAverageSetupTime(data);
-    const todayLMSData = data.filter((record) => record.SHIPMENTDATE && isToday(record.SHIPMENTDATE))
-    const lmsData = todayLMSData.map((record) => {
+    const todayLMSData = data.filter((record) => record.SHIPMENTDATE && isToday(record.SHIPMENTDATE));
+    const uniqueLMSData = [ ...new Map(todayLMSData.map(item => [item.SHIPMENTNO, item])).values() ];
+    const lmsData = uniqueLMSData.map((record) => {
       return {
         id: `${record.SHIPMENTNO}-${record.DPNO}`,
         truck_id: record.TRUCKID,
@@ -63,7 +64,8 @@ app.get("/lms-data", (request, response) => {
       };
     });
     // filter out records that already exit the warehouse (status > 4 or Time_exitWH exists)
-    const warehouseLMSData = lmsData.filter((record) => { return record.status !== status.COMPLETED })
+    // const warehouseLMSData = lmsData.filter((record) => { return record.status !== status.COMPLETED })
+    const warehouseLMSData = lmsData.length > 10 ? lmsData.slice(lmsData.length-10, lmsData.length) : lmsData;
     response.json({ count: warehouseLMSData.length, lmsData: warehouseLMSData });
   });
 });
@@ -132,18 +134,22 @@ const getAverageSetupTime = (records) => {
 };
 
 const getEstimatedTimeStr = (startDate, minutes) => {
+  if (!startDate) return null;
+
   let start = new Date(startDate);
   start.setMinutes(start.getMinutes() + minutes);
   const hours = start.getHours() - 7;
   const mins = start.getMinutes();
-  return `${hours > 10 ? hours : "0" + hours}:${mins > 10 ? mins : "0" + mins}`;
+  return `${hours >= 10 ? hours : "0" + hours}:${mins >= 10 ? mins : "0" + mins}`;
 };
 
 const formatDateToTimeStr = (date) => {
+  if (!date) return null;
+
   const tempDate = new Date(date);
   const hours = tempDate.getHours() - 7;
   const mins = tempDate.getMinutes();
-  return `${hours > 10 ? hours : "0" + hours}:${mins > 10 ? mins : "0" + mins}`;
+  return `${hours >= 10 ? hours : "0" + hours}:${mins >= 10 ? mins : "0" + mins}`;
 };
 
 const isToday = (dateStr) => {
