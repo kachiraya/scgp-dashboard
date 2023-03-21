@@ -30,7 +30,7 @@ function createWindow() {
     // height: 1024,
     title: "SCGP Dashboard"
   });
-  mainWindow.loadURL(isDev ? 'http://localhost:8080' : `file://${path.join(__dirname, '../dist/index.html')}`);
+  mainWindow.loadURL(isDev ? 'http://172.159.29.99:8080' : `file://${path.join(__dirname, '../dist/index.html')}`);
   mainWindow.on('closed', function () {
     mainWindow = null
   })
