@@ -10,17 +10,23 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 // Add headers before the routes are defined
 app.use(function (req, res, next) {
   // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader("Access-Control-Allow-Origin", "*");
 
   // Request methods you wish to allow
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
 
   // Request headers you wish to allow
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type"
+  );
 
   // Set to true if you need the website to include cookies in the requests sent
   // to the API (e.g. in case you use sessions)
-  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader("Access-Control-Allow-Credentials", true);
 
   // Pass to next layer of middleware
   next();
@@ -40,19 +46,27 @@ app.get("/lms-data", (request, response) => {
 
     const data = records?.recordset ?? [];
     const averageSetupTime = getAverageSetupTime(data);
-    const todayLMSData = data.filter((record) => record.SHIPMENTDATE && isToday(record.SHIPMENTDATE));
-    const uniqueLMSData = [ ...new Map(todayLMSData.map(item => [item.SHIPMENTNO, item])).values() ];
+    const todayLMSData = data.filter(
+      (record) => record.SHIPMENTDATE && isToday(record.SHIPMENTDATE)
+    );
+    const uniqueLMSData = [
+      ...new Map(todayLMSData.map((item) => [item.SHIPMENTNO, item])).values(),
+    ];
+
     const lmsData = uniqueLMSData.map((record) => {
+      const finishTime = record.FINISHPICKING
+        ? formatDateToTimeStr(record.FINISHPICKING)
+        : getEstimatedTimeStr(
+            record.STARTPICKING_DATE,
+            averageSetupTime[record.TRUCKTYPE]
+          );
       return {
         id: `${record.SHIPMENTNO}-${record.DPNO}`,
         truck_id: record.TRUCKID,
         shipment_no: record.SHIPMENTNO,
         picking_date: {
           start: formatDateToTimeStr(record.STARTPICKING_DATE),
-          estimate_finish: getEstimatedTimeStr(
-            record.STARTPICKING_DATE,
-            averageSetupTime[record.TRUCKTYPE]
-          ),
+          estimate_finish: finishTime,
         },
         status: getStatus(
           record.STARTPICKING_DATE,
@@ -65,7 +79,10 @@ app.get("/lms-data", (request, response) => {
     });
     // filter out records that already exit the warehouse (status > 4 or Time_exitWH exists)
     // const warehouseLMSData = lmsData.filter((record) => { return record.status !== status.COMPLETED })
-    const warehouseLMSData = lmsData.length > 10 ? lmsData.slice(lmsData.length-10, lmsData.length) : lmsData;
+    const warehouseLMSData =
+      lmsData.length > 10
+        ? lmsData.slice(lmsData.length - 10, lmsData.length)
+        : lmsData;
     response.json({ count: lmsData.length, lmsData: warehouseLMSData });
   });
 });
@@ -140,7 +157,9 @@ const getEstimatedTimeStr = (startDate, minutes) => {
   start.setMinutes(start.getMinutes() + minutes);
   const hours = start.getHours() - 7;
   const mins = start.getMinutes();
-  return `${hours >= 10 ? hours : "0" + hours}:${mins >= 10 ? mins : "0" + mins}`;
+  return `${hours >= 10 ? hours : "0" + hours}:${
+    mins >= 10 ? mins : "0" + mins
+  }`;
 };
 
 const formatDateToTimeStr = (date) => {
@@ -149,7 +168,9 @@ const formatDateToTimeStr = (date) => {
   const tempDate = new Date(date);
   const hours = tempDate.getHours() - 7;
   const mins = tempDate.getMinutes();
-  return `${hours >= 10 ? hours : "0" + hours}:${mins >= 10 ? mins : "0" + mins}`;
+  return `${hours >= 10 ? hours : "0" + hours}:${
+    mins >= 10 ? mins : "0" + mins
+  }`;
 };
 
 const isToday = (dateStr) => {
@@ -165,7 +186,7 @@ const isToday = (dateStr) => {
   }
 
   return false;
-}
+};
 
 const status = {
   WAITING: "WAITING",
@@ -175,7 +196,13 @@ const status = {
   COMPLETED: "COMPLETED",
 };
 
-const getStatus = (start_picking_date, finish_picking_date, arrive_wh_date, exit_wh_date, current_status) => {
+const getStatus = (
+  start_picking_date,
+  finish_picking_date,
+  arrive_wh_date,
+  exit_wh_date,
+  current_status
+) => {
   if (current_status || exit_wh_date) {
     return status.COMPLETED;
   } else if (!start_picking_date && !finish_picking_date) {
