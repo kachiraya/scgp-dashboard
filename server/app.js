@@ -66,7 +66,7 @@ app.get("/lms-data", (request, response) => {
     // filter out records that already exit the warehouse (status > 4 or Time_exitWH exists)
     // const warehouseLMSData = lmsData.filter((record) => { return record.status !== status.COMPLETED })
     const warehouseLMSData = lmsData.length > 10 ? lmsData.slice(lmsData.length-10, lmsData.length) : lmsData;
-    response.json({ count: warehouseLMSData.length, lmsData: warehouseLMSData });
+    response.json({ count: lmsData.length, lmsData: warehouseLMSData });
   });
 });
 
