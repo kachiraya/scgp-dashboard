@@ -5,6 +5,7 @@ const titleText = [
   "คิวที่",
   "ทะเบียนรถ",
   "Shipment No.",
+  "รถจอดรอ",
   "เวลาตั้งสินค้า",
   "คาดว่าจะตั้งสินค้าเสร็จ",
   "สถานะสินค้า",
@@ -24,7 +25,7 @@ const TitleTable = () => {
       {titleText.map((title, i) => (
         <Stack
           key={i}
-          flex={"0 0 calc(100%/7)"}
+          flex={"0 0 calc(100%/8)"}
           direction="row"
           justifyContent="center"
           alignItems="center"

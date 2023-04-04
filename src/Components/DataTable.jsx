@@ -12,7 +12,7 @@ const DataTable = ({ data, tableId }) => {
       }}
     >
       <Stack
-        flex={"0 0 calc(100%/7)"}
+        flex={"0 0 calc(100%/8)"}
         direction="row"
         justifyContent="center"
         alignItems="center"
@@ -22,7 +22,7 @@ const DataTable = ({ data, tableId }) => {
         </Typography>
       </Stack>
       <Stack
-        flex={"0 0 calc(100%/7)"}
+        flex={"0 0 calc(100%/8)"}
         direction="row"
         justifyContent="center"
         alignItems="center"
@@ -32,7 +32,7 @@ const DataTable = ({ data, tableId }) => {
         </Typography>
       </Stack>
       <Stack
-        flex={"0 0 calc(100%/7)"}
+        flex={"0 0 calc(100%/8)"}
         direction="row"
         justifyContent="center"
         alignItems="center"
@@ -42,7 +42,17 @@ const DataTable = ({ data, tableId }) => {
         </Typography>
       </Stack>
       <Stack
-        flex={"0 0 calc(100%/7)"}
+        flex={"0 0 calc(100%/8)"}
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Typography fontSize={18} fontWeight={700}>
+          {data.truck_wait_time ? data.truck_wait_time : "-"}
+        </Typography>
+      </Stack>
+      <Stack
+        flex={"0 0 calc(100%/8)"}
         direction="row"
         justifyContent="center"
         alignItems="center"
@@ -52,7 +62,7 @@ const DataTable = ({ data, tableId }) => {
         </Typography>
       </Stack>
       <Stack
-        flex={"0 0 calc(100%/7)"}
+        flex={"0 0 calc(100%/8)"}
         direction="row"
         justifyContent="center"
         alignItems="center"
@@ -62,7 +72,7 @@ const DataTable = ({ data, tableId }) => {
         </Typography>
       </Stack>
       <Stack
-        flex={"0 0 calc(100%/7)"}
+        flex={"0 0 calc(100%/8)"}
         direction="row"
         justifyContent="center"
         alignItems="center"
@@ -70,7 +80,7 @@ const DataTable = ({ data, tableId }) => {
         <StatusBox data={data.status} />
       </Stack>
       <Stack
-        flex={"0 0 calc(100%/7)"}
+        flex={"0 0 calc(100%/8)"}
         direction="row"
         justifyContent="center"
         alignItems="center"

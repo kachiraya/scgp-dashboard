@@ -38,7 +38,7 @@ app.get("/lms-data", (request, response) => {
   // query to the database and get the records
   request.query("select * from V_LMSDATA", function (err, records) {
     if (err) console.log(err);
-    console.log(records);
+    // console.log(records);
     if (!records) {
       console.log("Cannot retrieve record");
       return;
@@ -64,6 +64,7 @@ app.get("/lms-data", (request, response) => {
         id: `${record.SHIPMENTNO}-${record.DPNO}`,
         truck_id: record.TRUCKID,
         shipment_no: record.SHIPMENTNO,
+        truck_wait_time: formatDateToTimeStr(record.TIMESTATUS2_4),
         picking_date: {
           start: formatDateToTimeStr(record.STARTPICKING_DATE),
           estimate_finish: finishTime,
@@ -166,7 +167,8 @@ const formatDateToTimeStr = (date) => {
   if (!date) return null;
 
   const tempDate = new Date(date);
-  const hours = tempDate.getHours() - 7;
+  tempDate.setHours(tempDate.getHours() - 7)
+  const hours = tempDate.getHours();
   const mins = tempDate.getMinutes();
   return `${hours >= 10 ? hours : "0" + hours}:${
     mins >= 10 ? mins : "0" + mins
