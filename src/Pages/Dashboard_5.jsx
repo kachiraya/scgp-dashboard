@@ -10,6 +10,8 @@ import ShipmentTableData from "../Components/ShipmentTableData";
 import DummyBox from "../Components/DummyBox";
 import RackBox from "../Components/RackBox";
 
+const AGV_Link = "http://172.29.159.56/#/en/map";
+
 const Dashboard_5 = () => {
   return (
     <Stack
@@ -59,14 +61,30 @@ const Dashboard_5 = () => {
               overflowX: "scroll",
             }}
           >
-            <img
-              src={agv_example}
-              height={225}
+            <Box
+              display="flex"
               style={{
-                objectFit: "cover",
-                minWidth: "425px",
+                borderRadius: "20px",
+                border: "1px solid #fff",
               }}
-            />
+              // sx={{ position: "relative" }}
+              height={1}
+              width={"90%"}
+            >
+              <iframe
+                src={AGV_Link}
+                style={{
+                  transform: "rotate(90deg)",
+                  // position: "absolute",
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            </Box>
           </Stack>
         </Stack>
         {/* AGV system */}

@@ -11,6 +11,9 @@ import product_icon from "../assets/product_icon.svg";
 import DisplayDataTable from "../Components/DisplayDataTable";
 import DisplayRackAndDummyBox from "../Components/DisplayRackAndDummyBox";
 
+const CCTV_Link = "http://172.31.170.85"
+const AGV_Link = "http://172.29.159.56/#/en/map";
+
 const Dashboard_4 = () => {
   return (
     <Stack
@@ -64,56 +67,33 @@ const Dashboard_4 = () => {
                 backgroundColor: "scgGray.gray3",
               }}
             >
-              <img
-                src={camera_example}
-                height={"100%"}
+              <Box
+                display="flex"
                 style={{
-                  objectFit: "cover",
-                  minWidth: "20vw",
-                  aspectRatio: "16/9",
+                  borderRadius: "20px",
+                  border: "1px solid #fff",
                 }}
-              />
+                // sx={{ position: "relative" }}
+                height={1}
+                width={1}
+              >
+                <iframe
+                  src={CCTV_Link}
+                  style={{
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: "20px"
+                  }}
+                />
+              </Box>
             </Stack>
           </Box>
         </Box>
         {/* web cam1  */}
-
-        {/* web cam2  */}
-        <Box display="flex">
-          <Box minWidth={300} display="flex" flexDirection="column">
-            <Box minHeight={25} display={"inline-flex"}>
-              <img src={camera_icon} width="20px" height="20px" />
-              <Typography
-                ml={1}
-                fontSize={14}
-                fontWeight={700}
-                color="scgGray.gray1"
-              >
-                SCGWS-Converting-CAM74
-              </Typography>
-            </Box>
-            <Stack
-              mt={2}
-              direction="row"
-              flex={1}
-              gap={1}
-              sx={{
-                backgroundColor: "scgGray.gray3",
-              }}
-            >
-              <img
-                src={camera_example}
-                height={"100%"}
-                style={{
-                  objectFit: "cover",
-                  minWidth: "20vw",
-                  aspectRatio: "16/9",
-                }}
-              />
-            </Stack>
-          </Box>
-        </Box>
-        {/* web cam2  */}
 
         {/* AVG system */}
         <Stack minWidth={"25vw"}>
@@ -137,15 +117,30 @@ const Dashboard_4 = () => {
               backgroundColor: "scgGray.gray3",
             }}
           >
-            <img
-              src={agv_example}
-              height={"100%"}
+            <Box
+              display="flex"
               style={{
-                objectFit: "cover",
-                minWidth: "31vw",
-                aspectRatio: "16/9",
+                borderRadius: "20px",
+                border: "1px solid #fff",
               }}
-            />
+              // sx={{ position: "relative" }}
+              height={1}
+              width={1}
+            >
+              <iframe
+                src={AGV_Link}
+                style={{
+                  transform: "rotate(90deg)",
+                  // position: "absolute",
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            </Box>
           </Stack>
         </Stack>
         {/* AVG system */}

@@ -13,6 +13,8 @@ import rollpaper_icon from "../assets/rollpaper_icon.svg";
 import wms_example from "../assets/example/wms-example.png";
 import agv_example from "../assets/example/agv-example.png";
 
+const AGV_Link = "http://172.29.159.56/#/en/map";
+
 const Dashboard_2 = () => {
   return (
     <Stack
@@ -160,18 +162,31 @@ const Dashboard_2 = () => {
                 ระบบ AGV
               </Typography>
             </Box>
-            <img
-              src={agv_example}
-              // width={370}
-              height={"80%"}
+            <Box
+              display="flex"
               style={{
                 marginTop: "16px",
                 borderRadius: "20px",
                 border: "1px solid #fff",
-                objectFit: "cover",
-                aspectRatio: "16/9",
               }}
-            />
+              // sx={{ position: "relative" }}
+              height={1}
+              width={1}
+            >
+              <iframe
+                src={AGV_Link}
+                style={{
+                  transform: "rotate(90deg)",
+                  // position: "absolute",
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            </Box>
           </Stack>
         </Stack>
 
