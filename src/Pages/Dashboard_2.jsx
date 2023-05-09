@@ -112,6 +112,7 @@ const Dashboard_2 = () => {
       {/* upper section */}
       <Stack direction="row" gap={2}>
         <Stack
+          display="flex"
           mt={2}
           py={3}
           pl={3}
@@ -123,7 +124,7 @@ const Dashboard_2 = () => {
             backgroundColor: "scgGray.gray3",
           }}
         >
-          <Stack>
+          <Stack display="flex" flex={1}>
             <Box display={"inline-flex"}>
               <img src={warehouse_icon} width="25px" height="25px" />
               <Typography
@@ -139,7 +140,7 @@ const Dashboard_2 = () => {
               src={wms_example}
               mt={3}
               width={370}
-              height={"80%"}
+              height={"100%"}
               style={{
                 marginTop: "16px",
                 borderRadius: "20px",
@@ -150,7 +151,7 @@ const Dashboard_2 = () => {
             />
           </Stack>
 
-          <Stack ml={2}>
+          <Stack display="flex" flex={2} ml={2} mr={2}>
             <Box display={"inline-flex"}>
               <img src={truck_loading_icon} width="25px" height="25px" />
               <Typography
@@ -169,7 +170,7 @@ const Dashboard_2 = () => {
                 borderRadius: "20px",
                 border: "1px solid #fff",
               }}
-              // sx={{ position: "relative" }}
+              sx={{ position: "relative" }}
               height={1}
               width={1}
             >
@@ -177,13 +178,14 @@ const Dashboard_2 = () => {
                 src={AGV_Link}
                 style={{
                   transform: "rotate(90deg)",
-                  // position: "absolute",
-                  top: 0,
+                  position: "absolute",
+                  top: -100,
                   bottom: 0,
-                  left: 0,
-                  right: 0,
-                  width: "100%",
-                  height: "100%",
+                  left: 100,
+                  right: -100,
+                  width: "280px",
+                  height: "465px",
+                  borderRadius: "20px"
                 }}
               />
             </Box>
