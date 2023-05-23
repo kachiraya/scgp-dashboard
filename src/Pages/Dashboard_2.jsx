@@ -35,6 +35,39 @@ const Dashboard_2 = () => {
     getDeliveryData();
   }, [location]);
 
+  const customizeAGVMapWebView = () => {
+    const agvIframe = document.getElementById("agv-iframe");
+    
+    const agvMapElem = document.getElementById("map");
+    if (agvMapElem) {
+      agvMapElem.style.transform = "rotate(90deg)"
+      agvMapElem.scrollIntoView({
+        block: "center",
+        inline: "center"
+      })
+    }
+    
+    const agvHeaders = document.getElementsByClassName("app-Header.app-header-live");
+    if (agvHeaders && agvHeaders.length > 0) {
+      agvHeaders[0].remove();
+    }
+
+    const agvGutters = document.getElementsByClassName("gutter.gutter-vertical");
+    if (agvGutters && agvGutters.length > 0) {
+      agvGutters[0].remove();
+    }
+
+    const agvTableContainers = document.getElementsByClassName("table-container");
+    if (agvTableContainers && agvTableContainers.length > 0) {
+      agvTableContainers[0].remove();
+    }
+
+    const agvHistoryLiveToggle = document.getElementsByClassName("history-live-toggle");
+    if (agvHistoryLiveToggle && agvHistoryLiveToggle.length > 0) {
+      agvHistoryLiveToggle[0].remove();
+    }
+  }
+
   const getDeliveryData = () => {
     apiService
       .get(`${API_BASE_URL}/warehouse-progress`)
@@ -266,7 +299,6 @@ const Dashboard_2 = () => {
               <iframe
                 id="agv-iframe"
                 src={AGV_Link}
-                // src={"https://tailwindcss.com/docs/background-image"}
                 align="middle"
                 style={{
                   display: "flex",
@@ -274,6 +306,7 @@ const Dashboard_2 = () => {
                   height: "100%",
                   borderRadius: "20px",
                 }}
+                onLoad={customizeAGVMapWebView}
               />
             </Box>
           </Stack>
