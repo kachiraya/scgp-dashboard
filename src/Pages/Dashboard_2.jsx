@@ -56,6 +56,7 @@ const Dashboard_2 = () => {
   const customizeAGVMapWebView = () => {
     console.log("on load iframe completed!");
     const agvIframe = document.getElementById("agv-iframe");
+    agvIframe.style.transform = "rotate(90deg)";
 
     const agvMapElem = agvIframe.contentWindow?.document?.getElementById("map");
     if (agvMapElem) {
