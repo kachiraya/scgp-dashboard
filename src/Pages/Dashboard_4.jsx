@@ -30,8 +30,15 @@ const Dashboard_4 = () => {
 
   useEffect(() => {
     setFirstLoad(true);
-    getWarehousePercentage();
-    getDeliveryData();
+
+    const intervalId = setInterval(() => {
+      getWarehousePercentage();
+      getDeliveryData();
+    }, 15000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [location]);
 
   const getDeliveryData = () => {

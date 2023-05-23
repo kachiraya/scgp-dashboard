@@ -31,13 +31,18 @@ const Dashboard_2 = () => {
 
   useEffect(() => {
     setFirstLoad(true);
-    getWarehousePercentage();
-    getDeliveryData();
+
+    const intervalId = setInterval(() => {
+      getWarehousePercentage();
+      getDeliveryData();
+    }, 15000);
 
     const iframe = document.getElementById("agv-iframe");
     iframe.addEventListener("load", customizeAGVMapWebView, true);
 
     return () => {
+      clearInterval(intervalId);
+
       iframe.removeEventListener("load", () => {
         console.log("remove load event");
       });
@@ -324,7 +329,7 @@ const Dashboard_2 = () => {
                   height: "100%",
                   borderRadius: "20px",
                 }}
-                onLoad={customizeAGVMapWebView}
+                onLoadedData={customizeAGVMapWebView}
               />
             </Box>
           </Stack>
