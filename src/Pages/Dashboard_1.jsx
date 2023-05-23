@@ -7,6 +7,7 @@ import AppMenuDrawer from "../Components/AppMenuDrawer";
 import { useLocation } from "react-router-dom";
 import { apiService } from "../apiService";
 import { toast } from "react-toastify";
+import { API_BASE_URL } from "../config";
 
 let exampleData = [
   {
@@ -61,7 +62,7 @@ const Dashboard_1 = () => {
 
   const getData = () => {
     apiService
-      .get(`/lms-data`)
+      .get(`${API_BASE_URL}/lms-data`)
       .then((response) => {
         const responseData = response.data;
         setCount(responseData.count ?? 0);

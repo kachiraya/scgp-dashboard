@@ -13,6 +13,7 @@ import DisplayRackAndDummyBox from "../Components/DisplayRackAndDummyBox";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { apiService } from "../apiService";
+import { API_BASE_URL } from "../config";
 
 const CCTV_Link = "http://172.31.170.85";
 const AGV_Link = "http://172.29.159.56/#/en/map";
@@ -61,7 +62,7 @@ const Dashboard_4 = () => {
 
   const getWarehousePercentage = () => {
     apiService
-      .get(`/warehouse-percentage`)
+      .get(`${API_BASE_URL}/warehouse-percentage`)
       .then((response) => {
         const responseData = response.data;
 

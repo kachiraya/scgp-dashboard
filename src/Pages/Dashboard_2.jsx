@@ -15,6 +15,7 @@ import agv_example from "../assets/example/agv-example.png";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { apiService } from "../apiService";
+import { API_BASE_URL } from "../config";
 
 const AGV_Link = "http://172.29.159.56/#/en/map";
 
@@ -36,7 +37,7 @@ const Dashboard_2 = () => {
 
   const getDeliveryData = () => {
     apiService
-      .get(`/warehouse-progress`)
+      .get(`${API_BASE_URL}/warehouse-progress`)
       .then((response) => {
         const responseData = response.data;
         console.log(responseData);
@@ -62,7 +63,7 @@ const Dashboard_2 = () => {
 
   const getWarehousePercentage = () => {
     apiService
-      .get(`/warehouse-percentage`)
+      .get(`${API_BASE_URL}/warehouse-percentage`)
       .then((response) => {
         const responseData = response.data;
 
