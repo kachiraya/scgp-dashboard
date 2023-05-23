@@ -229,9 +229,9 @@ const Dashboard_4 = () => {
           </Stack>
         </Stack>
       </Stack>
-
       {/* upper section */}
 
+      {/* lower section */}
       <Stack
         mt={2}
         py={3}
@@ -268,8 +268,6 @@ const Dashboard_4 = () => {
         )}
         <Box display="flex">
           <Box
-            // minWidth={{ md: "55%", xl: "65%" }}
-            minWidth={"50vw"}
             width={"100%"}
             display="flex"
             flex={2}
@@ -299,6 +297,7 @@ const Dashboard_4 = () => {
               <DisplayDataTable showPlanOnly deliveryData={nextDeliveryData} />
             </Stack>
           </Box>
+
           <Box flex={1} ml={1} display="flex" flexDirection="column">
             <Box display={"inline-flex"}>
               <img src={table_icon} width="20px" height="20px" />
