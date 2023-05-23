@@ -33,42 +33,56 @@ const Dashboard_2 = () => {
     setFirstLoad(true);
     getWarehousePercentage();
     getDeliveryData();
+
+    const iframe = document.getElementById("agv-iframe");
+    iframe.addEventListener("load", customizeAGVMapWebView, true);
+
+    return () => {
+      iframe.removeEventListener("load")
+    }
   }, [location]);
 
   const customizeAGVMapWebView = () => {
-    console.log("on load iframe completed!")
+    console.log("on load iframe completed!");
     const agvIframe = document.getElementById("agv-iframe");
-    
+
     const agvMapElem = document.getElementById("map");
     if (agvMapElem) {
-      console.log("map available!")
-      agvMapElem.style.transform = "rotate(90deg)"
+      console.log("map available!");
+      agvMapElem.style.transform = "rotate(90deg)";
       agvMapElem.scrollIntoView({
         block: "center",
-        inline: "center"
-      })
+        inline: "center",
+      });
     }
-    
-    const agvHeaders = document.getElementsByClassName("app-Header.app-header-live");
+
+    const agvHeaders = document.getElementsByClassName(
+      "app-Header.app-header-live"
+    );
     if (agvHeaders && agvHeaders.length > 0) {
       agvHeaders[0].remove();
     }
 
-    const agvGutters = document.getElementsByClassName("gutter.gutter-vertical");
+    const agvGutters = document.getElementsByClassName(
+      "gutter.gutter-vertical"
+    );
     if (agvGutters && agvGutters.length > 0) {
       agvGutters[0].remove();
     }
 
-    const agvTableContainers = document.getElementsByClassName("table-container");
+    const agvTableContainers =
+      document.getElementsByClassName("table-container");
     if (agvTableContainers && agvTableContainers.length > 0) {
       agvTableContainers[0].remove();
     }
 
-    const agvHistoryLiveToggle = document.getElementsByClassName("history-live-toggle");
+    const agvHistoryLiveToggle = document.getElementsByClassName(
+      "history-live-toggle"
+    );
     if (agvHistoryLiveToggle && agvHistoryLiveToggle.length > 0) {
       agvHistoryLiveToggle[0].remove();
     }
-  }
+  };
 
   const getDeliveryData = () => {
     apiService
