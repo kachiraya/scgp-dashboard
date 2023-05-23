@@ -38,8 +38,10 @@ const Dashboard_2 = () => {
     iframe.addEventListener("load", customizeAGVMapWebView, true);
 
     return () => {
-      iframe.removeEventListener("load")
-    }
+      iframe.removeEventListener("load", () => {
+        console.log("remove load event");
+      });
+    };
   }, [location]);
 
   const customizeAGVMapWebView = () => {
