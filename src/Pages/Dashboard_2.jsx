@@ -57,7 +57,7 @@ const Dashboard_2 = () => {
     console.log("on load iframe completed!");
     const agvIframe = document.getElementById("agv-iframe");
 
-    const agvMapElem = agvIframe.getElementById("map");
+    const agvMapElem = document.getElementById("map");
     if (agvMapElem) {
       console.log("map available!");
       agvMapElem.style.transform = "rotate(90deg)";
@@ -67,14 +67,14 @@ const Dashboard_2 = () => {
       });
     }
 
-    const agvHeaders = agvIframe.getElementsByClassName(
+    const agvHeaders = document.getElementsByClassName(
       "app-Header.app-header-live"
     );
     if (agvHeaders && agvHeaders.length > 0) {
       agvHeaders[0].remove();
     }
 
-    const agvGutters = agvIframe.getElementsByClassName(
+    const agvGutters = document.getElementsByClassName(
       "gutter.gutter-vertical"
     );
     if (agvGutters && agvGutters.length > 0) {
@@ -82,12 +82,12 @@ const Dashboard_2 = () => {
     }
 
     const agvTableContainers =
-    agvIframe.getElementsByClassName("table-container");
+      document.getElementsByClassName("table-container");
     if (agvTableContainers && agvTableContainers.length > 0) {
       agvTableContainers[0].remove();
     }
 
-    const agvHistoryLiveToggle = agvIframe.getElementsByClassName(
+    const agvHistoryLiveToggle = document.getElementsByClassName(
       "history-live-toggle"
     );
     if (agvHistoryLiveToggle && agvHistoryLiveToggle.length > 0) {
