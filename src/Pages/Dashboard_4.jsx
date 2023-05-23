@@ -35,7 +35,7 @@ const Dashboard_4 = () => {
 
   const getDeliveryData = () => {
     apiService
-      .get("http://localhost:5001/warehouse-progress")
+      .get(`/warehouse-progress`)
       .then((response) => {
         const responseData = response.data;
         console.log(responseData);
@@ -61,7 +61,7 @@ const Dashboard_4 = () => {
 
   const getWarehousePercentage = () => {
     apiService
-      .get("http://localhost:5001/warehouse-percentage")
+      .get(`/warehouse-percentage`)
       .then((response) => {
         const responseData = response.data;
 

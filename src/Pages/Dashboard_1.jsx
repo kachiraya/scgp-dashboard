@@ -61,7 +61,7 @@ const Dashboard_1 = () => {
 
   const getData = () => {
     apiService
-      .get("http://localhost:5001/lms-data")
+      .get(`/lms-data`)
       .then((response) => {
         const responseData = response.data;
         setCount(responseData.count ?? 0);
