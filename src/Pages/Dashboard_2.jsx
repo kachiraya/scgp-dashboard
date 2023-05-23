@@ -40,6 +40,10 @@ const Dashboard_2 = () => {
     const iframe = document.getElementById("agv-iframe");
     iframe.addEventListener("load", customizeAGVMapWebView, true);
 
+    setTimeout(() => {
+      customizeAGVMapWebView();
+    }, 3000)
+
     return () => {
       clearInterval(intervalId);
 
