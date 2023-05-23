@@ -42,7 +42,7 @@ const Dashboard_2 = () => {
 
     setTimeout(() => {
       customizeAGVMapWebView();
-    }, 3000)
+    }, 3000);
 
     return () => {
       clearInterval(intervalId);
@@ -57,7 +57,7 @@ const Dashboard_2 = () => {
     console.log("on load iframe completed!");
     const agvIframe = document.getElementById("agv-iframe");
 
-    const agvMapElem = document.getElementById("map");
+    const agvMapElem = agvIframe.contentWindow?.document?.getElementById("map");
     if (agvMapElem) {
       console.log("map available!");
       agvMapElem.style.transform = "rotate(90deg)";
@@ -67,29 +67,34 @@ const Dashboard_2 = () => {
       });
     }
 
-    const agvHeaders = document.getElementsByClassName(
-      "app-Header.app-header-live"
-    );
+    const agvHeaders =
+      agvIframe.contentWindow?.document?.getElementsByClassName(
+        "app-Header.app-header-live"
+      );
     if (agvHeaders && agvHeaders.length > 0) {
       agvHeaders[0].remove();
     }
 
-    const agvGutters = document.getElementsByClassName(
-      "gutter.gutter-vertical"
-    );
+    const agvGutters =
+      agvIframe.contentWindow?.document?.getElementsByClassName(
+        "gutter.gutter-vertical"
+      );
     if (agvGutters && agvGutters.length > 0) {
       agvGutters[0].remove();
     }
 
     const agvTableContainers =
-      document.getElementsByClassName("table-container");
+      agvIframe.contentWindow?.document?.getElementsByClassName(
+        "table-container"
+      );
     if (agvTableContainers && agvTableContainers.length > 0) {
       agvTableContainers[0].remove();
     }
 
-    const agvHistoryLiveToggle = document.getElementsByClassName(
-      "history-live-toggle"
-    );
+    const agvHistoryLiveToggle =
+      agvIframe.contentWindow?.document?.getElementsByClassName(
+        "history-live-toggle"
+      );
     if (agvHistoryLiveToggle && agvHistoryLiveToggle.length > 0) {
       agvHistoryLiveToggle[0].remove();
     }
