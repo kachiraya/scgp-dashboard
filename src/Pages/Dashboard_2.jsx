@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 
 import DisplayDataTable from "../Components/DisplayDataTable";
@@ -12,10 +12,75 @@ import truck_loading_icon from "../assets/truck_loading_icon.svg";
 import rollpaper_icon from "../assets/rollpaper_icon.svg";
 import wms_example from "../assets/example/wms-example.png";
 import agv_example from "../assets/example/agv-example.png";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { apiService } from "../apiService";
 
 const AGV_Link = "http://172.29.159.56/#/en/map";
 
 const Dashboard_2 = () => {
+  const location = useLocation();
+  const [rackData, setRackdata] = useState(null);
+  const [dummyData, setDummydata] = useState(null);
+  const [allDeliveryData, setAllDeliveryData] = useState(null);
+  const [previousDeliveryData, setPreviousDeliveryData] = useState(null);
+  const [currentDeliveryData, setCurrentDeliveryData] = useState(null);
+  const [nextDeliveryData, setNextDeliveryData] = useState(null);
+  const [firstLoad, setFirstLoad] = useState(true);
+
+  useEffect(() => {
+    setFirstLoad(true);
+    getWarehousePercentage();
+    getDeliveryData();
+  }, [location]);
+
+  const getDeliveryData = () => {
+    apiService
+      .get("http://localhost:5001/warehouse-progress")
+      .then((response) => {
+        const responseData = response.data;
+        console.log(responseData);
+
+        setPreviousDeliveryData(responseData.previousDeliveryData ?? null);
+        setCurrentDeliveryData(responseData.currentDeliveryData ?? null);
+        setNextDeliveryData(responseData.nextDeliveryData ?? null);
+
+        setAllDeliveryData(responseData.allDeliveryData ?? null);
+
+        // if (isError) {
+        // showInfoToast("Connection Restored")
+        // setIsError(false);
+        // }
+        setFirstLoad(false);
+      })
+      .catch((err) => {
+        if (isError) return;
+        // showErrorToast(err.message);
+        // setIsError(true);
+      });
+  };
+
+  const getWarehousePercentage = () => {
+    apiService
+      .get("http://localhost:5001/warehouse-percentage")
+      .then((response) => {
+        const responseData = response.data;
+
+        setRackdata(responseData.rack ?? null);
+        setDummydata(responseData.dummy ?? null);
+
+        // if (isError) {
+        // showInfoToast("Connection Restored")
+        // setIsError(false);
+        // }
+      })
+      .catch((err) => {
+        if (isError) return;
+        // showErrorToast(err.message);
+        // setIsError(true);
+      });
+  };
+
   return (
     <Stack
       minHeight="100vh"
@@ -41,9 +106,31 @@ const Dashboard_2 = () => {
           backgroundColor: "scgGray.gray3",
           overflowX: "scroll",
         }}
+        position="relative"
       >
+        {firstLoad && (
+          <Box
+            display="flex"
+            position="absolute"
+            width="100%"
+            height="100%"
+            minHeight="45vh"
+            sx={{
+              backgroundColor: "rgba(0,0,0,0.2)",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backdropFilter: "blur(1px)",
+            }}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <CircularProgress />
+          </Box>
+        )}
         <Box display="flex" gap="8px" pr="8px">
-          <Box minWidth={"60vw"} display="flex" flexDirection="column">
+          <Box minWidth={"50vw"} display="flex" flexDirection="column">
             <Box display={"inline-flex"}>
               <img src={table_icon} width="20px" height="20px" />
               <Typography
@@ -65,9 +152,9 @@ const Dashboard_2 = () => {
                 overflowX: "scroll",
               }}
             >
-              <DisplayDataTable />
-              <DisplayDataTable />
-              <DisplayDataTable />
+              <DisplayDataTable deliveryData={previousDeliveryData} />
+              <DisplayDataTable deliveryData={currentDeliveryData} />
+              <DisplayDataTable showPlanOnly deliveryData={nextDeliveryData} />
             </Stack>
           </Box>
           <Box display="flex" flexDirection="column">
@@ -90,25 +177,26 @@ const Dashboard_2 = () => {
                 backgroundColor: "scgGray.gray3",
               }}
             >
-              <DisplayDataTable total />
+              <DisplayDataTable deliveryData={allDeliveryData} isAllDelivery />
               <Stack ml={2} gap={2}>
                 <DisplayRackAndDummyBox
                   icon={warehouse_icon}
                   title="Rack"
-                  pallets="13 Pallets"
-                  percentage="20%"
+                  pallets={rackData?.pallet ?? 0}
+                  percentage={rackData?.usagePercent ?? 0}
                 />
                 <DisplayRackAndDummyBox
                   icon={product_icon}
                   title="Dummy"
-                  pallets="13 Pallets"
-                  percentage="83%"
+                  pallets={dummyData?.pallet ?? 0}
+                  percentage={dummyData?.usagePercent ?? 0}
                 />
               </Stack>
             </Stack>
           </Box>
         </Box>
       </Stack>
+
       {/* upper section */}
       <Stack direction="row" gap={2}>
         <Stack
@@ -139,7 +227,7 @@ const Dashboard_2 = () => {
             <img
               src={wms_example}
               mt={3}
-              width={370}
+              width="100%"
               height={"100%"}
               style={{
                 marginTop: "16px",
@@ -151,7 +239,7 @@ const Dashboard_2 = () => {
             />
           </Stack>
 
-          <Stack display="flex" flex={2} ml={2} mr={2}>
+          <Stack display="flex" flex={1} ml={2} mr={2}>
             <Box display={"inline-flex"}>
               <img src={truck_loading_icon} width="25px" height="25px" />
               <Typography
@@ -170,22 +258,20 @@ const Dashboard_2 = () => {
                 borderRadius: "20px",
                 border: "1px solid #fff",
               }}
-              sx={{ position: "relative" }}
+              // sx={{ position: "relative" }}
               height={1}
               width={1}
             >
               <iframe
+                id="agv-iframe"
                 src={AGV_Link}
+                // src={"https://tailwindcss.com/docs/background-image"}
+                align="middle"
                 style={{
-                  transform: "rotate(90deg)",
-                  position: "absolute",
-                  top: -100,
-                  bottom: 0,
-                  left: 100,
-                  right: -100,
-                  width: "280px",
-                  height: "465px",
-                  borderRadius: "20px"
+                  display: "flex",
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "20px",
                 }}
               />
             </Box>

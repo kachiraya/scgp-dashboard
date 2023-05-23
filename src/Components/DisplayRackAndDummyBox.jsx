@@ -5,7 +5,7 @@ const DisplayRackAndDummyBox = ({ icon, title, pallets, percentage }) => {
   return (
     <Stack
       pt={1}
-      minWidth={200}
+      minWidth={220}
       minHeight={100}
       direction="column"
       gap={2}
@@ -21,8 +21,8 @@ const DisplayRackAndDummyBox = ({ icon, title, pallets, percentage }) => {
         <Typography ml={2} fontSize={14} fontWeight={700} color="#E1E1E3">
           {title} :
         </Typography>
-        <Typography fontSize={14} fontWeight={400} color="#E1E1E3">
-          {pallets}
+        <Typography fontSize={14} fontWeight={400} color="#E1E1E3" ml={1}>
+          {pallets} Pallets
         </Typography>
       </Stack>
       <Stack direction="row" alignItems="center">
@@ -30,8 +30,8 @@ const DisplayRackAndDummyBox = ({ icon, title, pallets, percentage }) => {
         <Typography ml={2} fontSize={14} fontWeight={700} color="#E1E1E3">
           {title} :
         </Typography>
-        <Typography fontSize={14} fontWeight={400} color="#E1E1E3">
-          {percentage}
+        <Typography fontSize={14} fontWeight={400} color="#E1E1E3" ml={1}>
+          {percentage} %
         </Typography>
       </Stack>
     </Stack>

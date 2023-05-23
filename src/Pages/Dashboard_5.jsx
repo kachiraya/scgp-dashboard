@@ -57,9 +57,8 @@ const Dashboard_5 = () => {
             gap={1}
             sx={{
               backgroundColor: "scgGray.gray3",
-              overflow: "hidden",
-              overflowX: "scroll",
             }}
+            height={1}
           >
             <Box
               display="flex"
@@ -69,19 +68,17 @@ const Dashboard_5 = () => {
               }}
               // sx={{ position: "relative" }}
               height={1}
-              width={"90%"}
+              width="95%"
             >
               <iframe
+                id="agv-iframe"
                 src={AGV_Link}
+                align="middle"
                 style={{
-                  transform: "rotate(90deg)",
-                  // position: "absolute",
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
+                  display: "flex",
                   width: "100%",
                   height: "100%",
+                  borderRadius: "20px",
                 }}
               />
             </Box>

@@ -66,7 +66,8 @@ export const getEstimatedTimeStr = (startDate, minutes) => {
 
   let start = new Date(startDate);
   start.setMinutes(start.getMinutes() + minutes);
-  const hours = start.getHours() - 7;
+  start.setHours(start.getHours() - 7);
+  const hours = start.getHours();
   const mins = start.getMinutes();
   return `${hours >= 10 ? hours : "0" + hours}:${
     mins >= 10 ? mins : "0" + mins

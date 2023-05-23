@@ -1,7 +1,18 @@
 import express from "express";
 import database from "./server.js";
 import bodyParser from "body-parser";
-import { formatDateToTimeStr, getAverageSetupTime, getEstimatedTimeStr, getStatus, isToday } from "./utilities/dashboard1.js";
+import {
+  formatDateToTimeStr,
+  getAverageSetupTime,
+  getEstimatedTimeStr,
+  getStatus,
+  isToday,
+} from "./utilities/dashboard1.js";
+import {
+  calculateAllWarehouseDelivery,
+  getShiftStartEndHours,
+  getTimeByHour,
+} from "./utilities/dashboard234.js";
 
 const app = express();
 
@@ -86,6 +97,123 @@ app.get("/lms-data", (request, response) => {
         ? lmsData.slice(lmsData.length - 10, lmsData.length)
         : lmsData;
     response.json({ count: lmsData.length, lmsData: warehouseLMSData });
+  });
+});
+
+app.get("/warehouse-progress", async (request, response) => {
+  var request = new database.Request();
+
+  const [plsTableData, wmsTableData] =
+    await Promise.all([
+      request.query(
+        "select Time_Plus1H, Delivery_type, Location from V_PLSData"
+      ),
+      request.query(
+        "select whtime, location_name, storage, pallet_length from V_STOCKWMS"
+      ),
+    ]);
+
+  const date = new Date();
+  const currentHour = date.getHours();
+
+  const plsData = plsTableData.recordset ?? [];
+  const wmsData = wmsTableData.recordset ?? [];
+
+  const { start, end } = getShiftStartEndHours();
+  const deliveryData = calculateAllWarehouseDelivery(
+    plsData,
+    wmsData,
+    start,
+    end
+  );
+  const allDeliveryData = {
+    time_range: `${getTimeByHour(start)}-${getTimeByHour(end)}`,
+    ...deliveryData,
+  };
+
+  const previousData = calculateAllWarehouseDelivery(
+    plsData,
+    wmsData,
+    currentHour - 1,
+    currentHour
+  );
+  const previousDeliveryData = {
+    time_range: `${getTimeByHour(currentHour - 1)}-${getTimeByHour(
+      currentHour
+    )}`,
+    ...previousData,
+  };
+
+  let currentData = calculateAllWarehouseDelivery(
+    plsData,
+    wmsData,
+    currentHour,
+    currentHour + 1
+  );
+  currentData.remaining.conveyor =
+    currentData.remaining.conveyor + previousData.remaining.conveyor;
+  currentData.remaining.dummy =
+    currentData.remaining.dummy + previousData.remaining.dummy;
+  currentData.remaining.export =
+    currentData.remaining.export + previousData.remaining.export;
+  const currentDeliveryData = {
+    time_range: `${getTimeByHour(currentHour)}-${getTimeByHour(
+      currentHour + 1
+    )}`,
+    ...currentData,
+  };
+
+  const nextData = calculateAllWarehouseDelivery(
+    plsData,
+    wmsData,
+    currentHour + 1,
+    currentHour + 2
+  );
+  const nextDeliveryData = {
+    time_range: `${getTimeByHour(currentHour + 1)}`,
+    ...nextData,
+  };
+
+  response.json({
+    previousDeliveryData: previousDeliveryData,
+    currentDeliveryData: currentDeliveryData,
+    nextDeliveryData: nextDeliveryData,
+    allDeliveryData: allDeliveryData,
+  });
+});
+
+app.get("/warehouse-percentage", async (request, response) => {
+  var request = new database.Request();
+
+  const [percentUsageData, palletDummyUsageData] =
+    await Promise.all([
+      request.query("select * from V_PercentUsage"),
+      request.query("select * from V_PalletDummy"),
+    ]);
+
+  // rack
+  const percentageData =
+    percentUsageData.recordset?.length > 0
+      ? percentUsageData.recordset[0]
+      : null;
+  const rackData = {
+    pallet: percentageData?.ToatlPallets ?? 0,
+    usagePercent: percentageData["%usage"] ?? 0,
+  };
+
+  // dummy
+  const dummyUsageData =
+    palletDummyUsageData.recordset?.length > 0
+      ? palletDummyUsageData.recordset[0]
+      : null;
+  const dummyData = {
+    pallet: dummyUsageData["Act Pallet"] ?? 0,
+    usagePercent: dummyUsageData["% Use"] ?? 0,
+  };
+
+  response.json({
+    rack: rackData,
+    dummy: dummyData,
   });
 });
 
