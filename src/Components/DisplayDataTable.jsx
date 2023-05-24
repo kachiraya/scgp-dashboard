@@ -16,7 +16,7 @@ const DisplayDataTable = ({ deliveryData, isAllDelivery, showPlanOnly }) => {
         />
         <DisplayDataBox
           ml={"2px"}
-          data={deliveryData?.fg.count ?? 0}
+          data={deliveryData?.fg.total_count ?? 0}
           width={showPlanOnly ? "7vw" : "14vw"}
           height={"6vh"}
           backgroundColor="scgOrange.orange2"
