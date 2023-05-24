@@ -1,5 +1,5 @@
 export const getTimeByHour = (hour) => {
-  if (hour > 10) {
+  if (hour >= 10) {
     return `${hour}:00`;
   }
   return `0${hour}:00`;
