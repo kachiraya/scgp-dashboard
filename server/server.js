@@ -6,7 +6,7 @@ var config = {
   password: "Mar#2022",
   server: "10.28.59.206",
   database: "WMS_METRO",
-  requestTimeout: 20000,
+  requestTimeout: 30000,
   options: {
     encrypt: true, // for azure
     trustServerCertificate: true, // change to true for local dev / self-signed certs

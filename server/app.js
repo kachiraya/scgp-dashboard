@@ -108,8 +108,9 @@ app.get("/warehouse-progress", async (request, response) => {
       request.query(
         "select Time_Plus1H, Delivery_type, Location from V_PLSData"
       ),
+      // WMS: today's record
       request.query(
-        "select whtime, location_name, storage, pallet_length from V_STOCKWMS"
+        "select cre_date, location_name, storage, pallet_length from V_STOCKWMS WHERE CAST(cre_date AS DATE) = CAST(GETDATE() AS DATE)"
       ),
     ]);
 
