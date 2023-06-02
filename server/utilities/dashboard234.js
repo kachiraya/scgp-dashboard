@@ -28,7 +28,6 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
     const wareHouseTime = new Date(record.User_Create_Date);
     const createTime = wareHouseTime.getUTCHours() + 1;
 
-    console.log(`start: ${start} -- ${createTime}`);
     return (
       createTime >= start &&
       createTime < end &&
