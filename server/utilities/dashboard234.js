@@ -67,7 +67,7 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
   const doingPalletConveyor = wmsData.filter((record) => {
     if (!record.cre_date) return false;
     const wareHouseTime = new Date(record.cre_date);
-    const createTime = wareHouseTime.getUTCHours() + 1;
+    const createTime = wareHouseTime.getUTCHours();
     const joinedPlsRecord = getPLSRecordByBatchNoDeliveryType(
       plsData,
       record.batchno,
@@ -86,7 +86,7 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
   const doingPalletConveyorDummy = wmsData.filter((record) => {
     if (!record.cre_date) return false;
     const wareHouseTime = new Date(record.cre_date);
-    const createTime = wareHouseTime.getUTCHours() + 1;
+    const createTime = wareHouseTime.getUTCHours();
     const joinedPlsRecord = getPLSRecordByBatchNoDeliveryType(
       plsData,
       record.batchno,
@@ -105,7 +105,7 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
   const doingPalletDummy = wmsData.filter((record) => {
     if (!record.cre_date) return false;
     const wareHouseTime = new Date(record.cre_date);
-    const createTime = wareHouseTime.getUTCHours() + 1;
+    const createTime = wareHouseTime.getUTCHours();
     const joinedPlsRecord = getPLSRecordByBatchNoDeliveryType(
       plsData,
       record.batchno,
@@ -124,7 +124,7 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
   const doingPalletExport = wmsData.filter((record) => {
     if (!record.cre_date) return false;
     const wareHouseTime = new Date(record.cre_date);
-    const createTime = wareHouseTime.getUTCHours() + 1;
+    const createTime = wareHouseTime.getUTCHours();
     const joinedPlsRecord = getPLSRecordByBatchNoDeliveryType(
       plsData,
       record.batchno,
