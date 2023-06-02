@@ -22,6 +22,7 @@ export const getShiftStartEndHours = () => {
 };
 
 export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
+  console.log(`start: ${start} -- end: ${end}`);
   // FGs/Planning
   const fGConveyor = plsData.filter((record) => {
     if (!record.User_Create_Date) return false;
