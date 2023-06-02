@@ -41,7 +41,7 @@ const Dashboard_1 = () => {
   useEffect(() => {
     getData();
 
-    const intervalId = setInterval(getData, 5000);
+    const intervalId = setInterval(getData, 5000); // request every 5 secs
 
     return () => {
       clearInterval(intervalId);

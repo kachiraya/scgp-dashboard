@@ -7,14 +7,11 @@ export const getTimeByHour = (hour) => {
   return `0${hour}:00`;
 };
 
-export const getShiftStartEndHours = () => {
-  const date = new Date();
-  const currentHour = date.getHours();
-
-  if (currentHour >= 7 && currentHour < 16) {
-    return { start: 7, end: 16 };
-  } else if (currentHour >= 16 && currentHour < 24) {
-    return { start: 16, end: 24 };
+export const getShiftStartEndHours = (currentHour) => {
+  if (currentHour >= 7 && currentHour < 17) {
+    return { start: 7, end: 17 };
+  } else if (currentHour >= 17 && currentHour < 24) {
+    return { start: 17, end: 24 };
   } else if (currentHour >= 0 && currentHour < 7) {
     return { start: 0, end: 7 };
   }
@@ -54,7 +51,7 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
     return (
       createTime >= start &&
       createTime < end &&
-      record.Delivery_type === "Export" && 
+      record.Delivery_type === "Export" &&
       record.Location === "W9"
     );
   });
@@ -78,11 +75,12 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
       createTime >= start &&
       createTime < end &&
       record.location_name?.includes("-") &&
-      (record.storage === "W9" || joinedPlsRecord.Location === "W9") &&
+      (record.storage === "W9" && joinedPlsRecord.Location === "W9") &&
       record.pallet_length < 47
     );
   });
   console.log("doingPalletConveyor", doingPalletConveyor?.length);
+
   const doingPalletConveyorDummy = wmsData.filter((record) => {
     if (!record.cre_date) return false;
     const wareHouseTime = new Date(record.cre_date);
@@ -97,11 +95,14 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
       createTime >= start &&
       createTime < end &&
       record.location_name === "Dummy" &&
-      (record.storage === "W9" || joinedPlsRecord.Location === "W9") &&
-      record.pallet_length < 47
+      ((record.storage === "W9" &&
+        joinedPlsRecord.Location === "W9" &&
+        record.pallet_length < 47) ||
+        (record.storage === "W9" && joinedPlsRecord.Location === "9"))
     );
   });
   console.log("doingPalletConveyorDummy", doingPalletConveyorDummy?.length);
+
   const doingPalletDummy = wmsData.filter((record) => {
     if (!record.cre_date) return false;
     const wareHouseTime = new Date(record.cre_date);
@@ -116,7 +117,7 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
       createTime >= start &&
       createTime < end &&
       record.location_name === "Dummy" &&
-      (record.storage === "9" || joinedPlsRecord.Location === "9") &&
+      (record.storage === "9" && joinedPlsRecord.Location === "9") &&
       record.pallet_length >= 47
     );
   });
@@ -135,7 +136,7 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
       createTime >= start &&
       createTime < end &&
       record.location_name === "Dummy" &&
-      (record.storage === "9" || joinedPlsRecord.Location === "W9")
+      (record.storage === "W9" || joinedPlsRecord.Location === "W9")
     );
   });
   console.log("doingPalletExport", doingPalletExport?.length);

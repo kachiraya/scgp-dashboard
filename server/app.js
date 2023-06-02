@@ -120,7 +120,7 @@ app.get("/warehouse-progress", async (request, response) => {
   const plsData = plsTableData.recordset ?? [];
   const wmsData = wmsTableData.recordset ?? [];
 
-  const { start, end } = getShiftStartEndHours();
+  const { start, end } = getShiftStartEndHours(currentHour);
   const deliveryData = calculateAllWarehouseDelivery(
     plsData,
     wmsData,

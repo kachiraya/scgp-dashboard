@@ -35,7 +35,7 @@ const Dashboard_2 = () => {
     const intervalId = setInterval(() => {
       getWarehousePercentage();
       getDeliveryData();
-    }, 15000);
+    }, 30000); // request every 30 secs
 
     const iframe = document.getElementById("agv-iframe");
     iframe.addEventListener("load", customizeAGVMapWebView, true);
