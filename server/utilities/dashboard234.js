@@ -135,7 +135,7 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
       createTime >= start &&
       createTime < end &&
       record.location_name === "Dummy" &&
-      (record.storage === "W9" || joinedPlsRecord.Location === "W9")
+      (record.storage === "9" || joinedPlsRecord.Location === "W9")
     );
   });
   console.log("doingPalletExport", doingPalletExport?.length);
