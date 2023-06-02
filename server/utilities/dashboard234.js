@@ -23,27 +23,41 @@ export const getShiftStartEndHours = () => {
 
 export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
   // FGs/Planning
-  const fGConveyor = plsData.filter(
-    (record) =>
-      record.Time_Plus1H >= start &&
-      record.Time_Plus1H < end &&
+  const fGConveyor = plsData.filter((record) => {
+    if (!record.User_Create_Date) return false;
+    const wareHouseTime = new Date(record.User_Create_Date);
+    const createTime = wareHouseTime.getUTCHours() + 1;
+
+    console.log(`start: ${start} -- ${createTime}`);
+    return (
+      createTime >= start &&
+      createTime < end &&
       record.Delivery_type === "Domestic" &&
       record.Location === "W9"
-  );
-  const fGDummy = plsData.filter(
-    (record) =>
-      record.Time_Plus1H >= start &&
-      record.Time_Plus1H < end &&
+    );
+  });
+  const fGDummy = plsData.filter((record) => {
+    if (!record.User_Create_Date) return false;
+    const wareHouseTime = new Date(record.User_Create_Date);
+    const createTime = wareHouseTime.getUTCHours() + 1;
+    return (
+      createTime >= start &&
+      createTime < end &&
       record.Delivery_type === "Domestic" &&
       record.Location === "9"
-  );
-  const fGExport = plsData.filter(
-    (record) =>
-      record.Time_Plus1H >= start &&
-      record.Time_Plus1H < end &&
-      record.Delivery_type === "Export" &&
-      record.Location === "9"
-  );
+    );
+  });
+  const fGExport = plsData.filter((record) => {
+    if (!record.User_Create_Date) return false;
+    const wareHouseTime = new Date(record.User_Create_Date);
+    const createTime = wareHouseTime.getUTCHours() + 1;
+    return (
+      createTime >= start &&
+      createTime < end &&
+      record.Delivery_type === "Export" && 
+      record.Location === "W9"
+    );
+  });
 
   const fGConveyorCount = fGConveyor?.length ?? 0;
   const fGDummyCount = fGDummy?.length ?? 0;
@@ -59,10 +73,6 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
       record.batchno,
       "Domestic"
     );
-    // if (joinedPlsRecord && record.location_name?.includes("-") && start === 13) {
-    //   console.log(`first: ${record.pallet_length < 47} record: ${JSON.stringify(record)}`)
-    //   console.log(`first: pls: ${JSON.stringify(joinedPlsRecord)}`)
-    // }
     return (
       joinedPlsRecord &&
       joinedPlsRecord.Time_Plus1H >= start &&
@@ -72,8 +82,7 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
       record.pallet_length < 47
     );
   });
-  console.log(`start: ${start} -- end: ${end}`)
-  console.log("doingPalletConveyor", doingPalletConveyor?.length)
+  console.log("doingPalletConveyor", doingPalletConveyor?.length);
   const doingPalletConveyorDummy = wmsData.filter((record) => {
     if (!record.cre_date) return false;
     const wareHouseTime = new Date(record.cre_date);
@@ -92,7 +101,7 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
       record.pallet_length < 47
     );
   });
-  console.log("doingPalletConveyorDummy", doingPalletConveyorDummy?.length)
+  console.log("doingPalletConveyorDummy", doingPalletConveyorDummy?.length);
   const doingPalletDummy = wmsData.filter((record) => {
     if (!record.cre_date) return false;
     const wareHouseTime = new Date(record.cre_date);
@@ -111,7 +120,7 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
       record.pallet_length >= 47
     );
   });
-  console.log("doingPalletDummy", doingPalletDummy?.length)
+  console.log("doingPalletDummy", doingPalletDummy?.length);
   const doingPalletExport = wmsData.filter((record) => {
     if (!record.cre_date) return false;
     const wareHouseTime = new Date(record.cre_date);
@@ -129,7 +138,7 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
       (record.storage === "9" || joinedPlsRecord.Location === "9")
     );
   });
-  console.log("doingPalletExport", doingPalletExport?.length)
+  console.log("doingPalletExport", doingPalletExport?.length);
 
   const doingPalletConveyorCount = doingPalletConveyor?.length ?? 0;
   const doingPalletConveyorDummyCount = doingPalletConveyorDummy?.length ?? 0;
