@@ -106,7 +106,7 @@ app.get("/warehouse-progress", async (request, response) => {
   const [plsTableData, wmsTableData] =
     await Promise.all([
       request.query(
-        "select Time_Plus1H, Delivery_type, Location, User_Create_Date from V_PLSData"
+        "select Time_Plus1H, Delivery_type, Location, User_Create_Date, Batch_Number from V_PLSData"
       ),
       // WMS: today's record
       request.query(
