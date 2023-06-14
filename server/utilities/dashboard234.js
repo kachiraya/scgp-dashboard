@@ -74,7 +74,7 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
       joinedPlsRecord &&
       createTime >= start &&
       createTime < end &&
-      (record.location_name !== "PROD" && record.location_name !== "DUMMY") &&
+      record.location_name !== "Dummy" &&
       (record.storage === "W9" && joinedPlsRecord.Location === "W9") &&
       record.pallet_length < 47
     );

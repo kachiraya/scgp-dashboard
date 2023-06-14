@@ -15,7 +15,7 @@ import { useLocation } from "react-router-dom";
 import { apiService } from "../apiService";
 import { API_BASE_URL } from "../config";
 
-const CCTV_Link = "http://10.28.53.41/WebCam.html";
+const CCTV_Link = "http://172.31.170.85/#view";
 const AGV_Link = "http://172.29.159.56/#/en/map";
 
 const Dashboard_4 = () => {
