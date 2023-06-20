@@ -55,9 +55,9 @@ export const getAverageSetupTime = (records) => {
     }, 0) / (trailorTruckRecords.length > 0 ? trailorTruckRecords.length : 1);
 
   return {
-    [`${truckType.SIX_WHEELED}`]: sixWheeledTruckAverageTime,
-    [`${truckType.TEN_WHEELED}`]: tenWheeledTruckAverageTime,
-    [`${truckType.TRAILOR}`]: trailorTruckAverageTime,
+    [`${truckType.SIX_WHEELED}`]: 96,
+    [`${truckType.TEN_WHEELED}`]: 108,
+    [`${truckType.TRAILOR}`]: 270,
   };
 };
 
