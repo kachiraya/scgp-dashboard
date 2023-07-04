@@ -120,9 +120,9 @@ const Dashboard_1 = () => {
         backgroundColor: "#D5D5D5",
       }}
     >
-      <Stack>
+      {/* <Stack>
         <AppMenuDrawer />
-      </Stack>
+      </Stack> */}
       <Stack mt={4} alignItems="center">
         <Typography fontSize={32} fontWeight={700}>
           ตารางแสดงสถานะคิวรถสำหรับพนักงานขับรถ
