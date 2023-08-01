@@ -161,7 +161,7 @@ const Dashboard_2 = () => {
               gap={2}
               sx={{
                 backgroundColor: "scgGray.gray3",
-                overflow: "hidden",
+                // overflow: "hidden",
                 overflowX: "scroll",
               }}
             >
@@ -261,7 +261,7 @@ const Dashboard_2 = () => {
               <DisplayDataTable
                 deliveryData={allDeliveryData}
                 isAllDelivery
-                minWidth="30vw"
+                minWidth="32vw"
               />
               <Stack ml={2} gap={2}>
                 <DisplayRackAndDummyBox

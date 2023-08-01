@@ -169,7 +169,7 @@ const Dashboard_2 = () => {
             </Stack>
           </Box>
 
-          <Box width={1}>
+          <Box width={1} overflow="scroll">
             <Box display={"inline-flex"}>
               <img src={table_icon} width="20px" height="20px" />
               <Typography
@@ -193,7 +193,7 @@ const Dashboard_2 = () => {
               <DisplayDataTable
                 deliveryData={allDeliveryData}
                 isAllDelivery
-                minWidth="30vw"
+                minWidth="32vw"
               />
               <Stack ml={2} gap={2}>
                 <DisplayRackAndDummyBox
@@ -269,7 +269,7 @@ const Dashboard_2 = () => {
               gap={2}
               sx={{
                 backgroundColor: "scgGray.gray3",
-                overflow: "hidden",
+                // overflow: "hidden",
                 overflowX: "scroll",
               }}
             >

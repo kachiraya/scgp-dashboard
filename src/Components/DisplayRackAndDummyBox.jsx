@@ -5,7 +5,7 @@ const DisplayRackAndDummyBox = ({ icon, title, pallets, percentage }) => {
   return (
     <Stack
       pt={1}
-      minWidth={200}
+      minWidth={250}
       minHeight={100}
       height="100%"
       direction="column"
