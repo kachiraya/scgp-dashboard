@@ -87,7 +87,7 @@ const AGVPage = () => {
     // agvIframe.style.height = `${340}px`;
     // agvIframe.style.width = `${271}px`;
 
-    agvIframe.style.transform = "rotate(90deg) translateX(-136%)";
+    agvIframe.style.transform = "rotate(90deg) translateX(-240%)";
     // agvIframe.style.transformOrigin = "39vw 60vh";
     agvIframe.style.transformOrigin = "bottom left";
 
