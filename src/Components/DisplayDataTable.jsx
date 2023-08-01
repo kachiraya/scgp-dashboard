@@ -6,7 +6,7 @@ const DisplayDataTable = ({ deliveryData, isAllDelivery, showPlanOnly, minWidth 
   return (
     <Stack
       direction="row"
-      minWidth={minWidth ? minWidth : showPlanOnly ? "20vw" : "35vw"}
+      minWidth={minWidth ? minWidth : showPlanOnly ? "20vw" : "32vw"}
       borderRadius="24px"
       overflow="hidden"
       border={"1px solid #FFF"}
@@ -39,7 +39,7 @@ const DisplayDataTable = ({ deliveryData, isAllDelivery, showPlanOnly, minWidth 
             flex={1}
             height={"6vh"}
             backgroundColor="scgGray.gray2"
-            fontSize={16}
+            fontSize={12}
           />
           {!showPlanOnly && (
             <>
@@ -49,7 +49,7 @@ const DisplayDataTable = ({ deliveryData, isAllDelivery, showPlanOnly, minWidth 
                 flex={1}
                 height={"6vh"}
                 backgroundColor="scgGray.gray2"
-                fontSize={16}
+                fontSize={12}
               />
               <DisplayDataBox
                 data="Remaining"
@@ -57,7 +57,7 @@ const DisplayDataTable = ({ deliveryData, isAllDelivery, showPlanOnly, minWidth 
                 // width={68}
                 height={"6vh"}
                 backgroundColor="scgGray.gray2"
-                fontSize={16}
+                fontSize={12}
               />
             </>
           )}

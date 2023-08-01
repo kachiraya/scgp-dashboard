@@ -186,7 +186,7 @@ const Dashboard_2 = () => {
             minHeight="45vh"
             sx={{
               backgroundColor: "rgba(0,0,0,0.2)",
-              top: 0,
+              top: 10,
               left: 0,
               right: 0,
               bottom: 0,
@@ -233,7 +233,7 @@ const Dashboard_2 = () => {
                 backgroundColor: "scgGray.gray3",
               }}
             >
-              <DisplayDataTable deliveryData={morningDeliveryData} minWidth="30vw" />
+              <DisplayDataTable deliveryData={morningDeliveryData} minWidth="32vw" />
             </Stack>
           </Box>
 
@@ -261,7 +261,7 @@ const Dashboard_2 = () => {
               <DisplayDataTable
                 deliveryData={allDeliveryData}
                 isAllDelivery
-                minWidth="40vw"
+                minWidth="30vw"
               />
               <Stack ml={2} gap={2}>
                 <DisplayRackAndDummyBox

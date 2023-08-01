@@ -17,8 +17,8 @@ import { useLocation } from "react-router-dom";
 import { apiService } from "../apiService";
 import { API_BASE_URL } from "../config";
 
-const AGV_Link = "http://172.29.159.56/#/en/map";
-
+// const AGV_Link = "http://172.29.159.56/#/en/map";
+const AGV_Link = "https://tailwindcss.com/"
 const AGVPage = () => {
   const location = useLocation();
 
@@ -87,8 +87,9 @@ const AGVPage = () => {
     // agvIframe.style.height = `${340}px`;
     // agvIframe.style.width = `${271}px`;
 
-    agvIframe.style.transform = "rotate(90deg)";
-    // agvIframe.style.transformOrigin = "left top";
+    agvIframe.style.transform = "rotate(90deg) translateX(-136%)";
+    // agvIframe.style.transformOrigin = "39vw 60vh";
+    agvIframe.style.transformOrigin = "bottom left";
 
     // agvIframe.style.height = newHeight;
     // agvIframe.style.width = newWidth;
@@ -200,11 +201,13 @@ const AGVPage = () => {
               style={{
                 marginTop: "16px",
                 borderRadius: "20px",
-                border: "1px solid #fff",
+                // border: "1px solid #fff",
               }}
               // sx={{ position: "relative" }}
-              minHeight={"80vh"}
-              width="93vw"
+            //   minHeight={"80vh"}
+            //   width="93vw"
+              width="80vh"
+              height="90vw"
             >
               <iframe
                 id="agv-iframe"
