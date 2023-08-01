@@ -17,8 +17,8 @@ import { useLocation } from "react-router-dom";
 import { apiService } from "../apiService";
 import { API_BASE_URL } from "../config";
 
-// const AGV_Link = "http://172.29.159.56/#/en/map";
-const AGV_Link = "https://tailwindcss.com/"
+const AGV_Link = "http://172.29.159.56/#/en/map";
+
 const AGVPage = () => {
   const location = useLocation();
 
