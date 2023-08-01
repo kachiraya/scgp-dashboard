@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import TitleTable from "../Components/TitleTable";
 import DataTable from "../Components/DataTable";
@@ -18,7 +18,7 @@ let exampleData = [
     expectedTime: "08:45",
     status: "SUCCESS",
     destination: "A1",
-  }
+  },
 ];
 
 const emptyData = {
@@ -37,6 +37,7 @@ const Dashboard_1 = () => {
   const [dumpData, setDumpData] = useState([]);
   const [displayData, setDisplayData] = useState([]);
   const [isError, setIsError] = useState(false);
+  const [firstLoad, setFirstLoad] = useState(true);
 
   useEffect(() => {
     getData();
@@ -49,8 +50,8 @@ const Dashboard_1 = () => {
   }, [location]);
 
   useEffect(() => {
-    let lmsData = dumpData ?? []
-    const lmsDataCount = lmsData.length
+    let lmsData = dumpData ?? [];
+    const lmsDataCount = lmsData.length;
     if (lmsDataCount < 10) {
       for (let i = 0; i < 10 - lmsDataCount; i++) {
         lmsData.push(emptyData);
@@ -58,7 +59,7 @@ const Dashboard_1 = () => {
     }
 
     setDisplayData(lmsData.slice(0, 10));
-  }, [dumpData])
+  }, [dumpData]);
 
   const getData = () => {
     apiService
@@ -74,6 +75,7 @@ const Dashboard_1 = () => {
           // showInfoToast("Connection Restored")
           setIsError(false);
         }
+        setFirstLoad(false);
       })
       .catch((err) => {
         if (isError) return;
@@ -94,7 +96,7 @@ const Dashboard_1 = () => {
       progress: undefined,
       theme: "colored",
     });
-  }
+  };
 
   const showInfoToast = (message) => {
     toast(message, {
@@ -108,7 +110,7 @@ const Dashboard_1 = () => {
       progress: undefined,
       theme: "colored",
     });
-  }
+  };
 
   return (
     <Stack
@@ -139,10 +141,37 @@ const Dashboard_1 = () => {
         <Typography fontSize={16} fontWeight={700} textAlign="right" mb="8px">
           จำนวนคิวทั้งหมด: {count}
         </Typography>
-        <TitleTable />
-        {displayData.map((data, i) => (
-          <DataTable key={`record-${data.id ? data.id : i}`} data={data} tableId={i + 1} />
-        ))}
+        <Stack position="relative">
+          {firstLoad && (
+            <Box
+              display="flex"
+              position="absolute"
+              width="100%"
+              height="100%"
+              minHeight="45vh"
+              sx={{
+                backgroundColor: "rgba(0,0,0,0.2)",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backdropFilter: "blur(1px)",
+              }}
+              justifyContent="center"
+              alignItems="center"
+            >
+              <CircularProgress />
+            </Box>
+          )}
+          <TitleTable />
+          {displayData.map((data, i) => (
+            <DataTable
+              key={`record-${data.id ? data.id : i}`}
+              data={data}
+              tableId={i + 1}
+            />
+          ))}
+        </Stack>
       </Stack>
     </Stack>
   );

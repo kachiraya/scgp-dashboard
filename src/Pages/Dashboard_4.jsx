@@ -1,32 +1,33 @@
-import { Box, CircularProgress, Stack, Typography } from "@mui/material";
-import AppMenuDrawer from "../Components/AppMenuDrawer";
-import truck_loading_icon from "../assets/truck_loading_icon.svg";
-import table_icon from "../assets/table_icon.svg";
-import wms_example from "../assets/example/wms-example.png";
-import agv_example from "../assets/example/agv-example.png";
-import camera_icon from "../assets/camera_icon.svg";
-import camera_example from "../assets/example/camera-example.png";
-import warehouse_icon from "../assets/warehouse_icon.svg";
-import product_icon from "../assets/product_icon.svg";
+import { CircularProgress, Typography } from "@mui/material";
+import { Box, Stack } from "@mui/system";
+
 import DisplayDataTable from "../Components/DisplayDataTable";
 import DisplayRackAndDummyBox from "../Components/DisplayRackAndDummyBox";
+import AppMenuDrawer from "../Components/AppMenuDrawer";
+
+import table_icon from "../assets/table_icon.svg";
+import warehouse_icon from "../assets/warehouse_icon.svg";
+import product_icon from "../assets/product_icon.svg";
+import dummy_icon from "../assets/dummy_icon.svg";
+import rollpaper_icon from "../assets/rollpaper_icon.svg";
+import wms_example from "../assets/example/wms-example.png";
+import agv_example from "../assets/example/agv-example.png";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { apiService } from "../apiService";
 import { API_BASE_URL } from "../config";
 
-const CCTV_Link = "http://172.31.170.85/#view";
-const AGV_Link = "http://172.29.159.56/#/en/map";
-
-const Dashboard_4 = () => {
+const Dashboard_2 = () => {
   const location = useLocation();
   const [rackData, setRackdata] = useState(null);
   const [dummyData, setDummydata] = useState(null);
   const [allDeliveryData, setAllDeliveryData] = useState(null);
+  const [morningDeliveryData, setMorningDeliveryData] = useState(null);
   const [previousDeliveryData, setPreviousDeliveryData] = useState(null);
   const [currentDeliveryData, setCurrentDeliveryData] = useState(null);
   const [nextDeliveryData, setNextDeliveryData] = useState(null);
   const [firstLoad, setFirstLoad] = useState(true);
+  const [didRotateMap, setDidRotateMap] = useState(false);
 
   useEffect(() => {
     setFirstLoad(true);
@@ -34,16 +35,20 @@ const Dashboard_4 = () => {
     const intervalId = setInterval(() => {
       getWarehousePercentage();
       getDeliveryData();
-    }, 15000);
+    }, 30000); // request every 30 secs
 
     return () => {
       clearInterval(intervalId);
+
+      // iframe.removeEventListener("load", () => {
+      //   console.log("remove load event");
+      // });
     };
   }, [location]);
 
   const getDeliveryData = () => {
     apiService
-      .get(`/warehouse-progress`)
+      .get(`${API_BASE_URL}/warehouse-progress`)
       .then((response) => {
         const responseData = response.data;
         console.log(responseData);
@@ -53,6 +58,7 @@ const Dashboard_4 = () => {
         setNextDeliveryData(responseData.nextDeliveryData ?? null);
 
         setAllDeliveryData(responseData.allDeliveryData ?? null);
+        setMorningDeliveryData(responseData.morningDeliveryData ?? null);
 
         // if (isError) {
         // showInfoToast("Connection Restored")
@@ -61,7 +67,7 @@ const Dashboard_4 = () => {
         setFirstLoad(false);
       })
       .catch((err) => {
-        if (isError) return;
+        // if (isError) return;
         // showErrorToast(err.message);
         // setIsError(true);
       });
@@ -82,11 +88,11 @@ const Dashboard_4 = () => {
         // }
       })
       .catch((err) => {
-        if (isError) return;
+        // if (isError) return;
         // showErrorToast(err.message);
         // setIsError(true);
       });
-  }
+  };
 
   return (
     <Stack
@@ -102,153 +108,124 @@ const Dashboard_4 = () => {
       </Stack>
 
       {/* upper section */}
+      <Stack direction="row" gap={2} position="relative">
+        {firstLoad && (
+          <Box
+            display="flex"
+            position="absolute"
+            width="100%"
+            height="100%"
+            minHeight="45vh"
+            sx={{
+              backgroundColor: "rgba(0,0,0,0.2)",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backdropFilter: "blur(1px)",
+            }}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <CircularProgress />
+          </Box>
+        )}
 
-      <Stack
-        mt={5}
-        py={3}
-        px={3}
-        direction="row"
-        minHeight="40vh"
-        minWidth={"55vw"}
-        gap="16px"
-        sx={{
-          borderRadius: "10px",
-          backgroundColor: "scgGray.gray3",
-          overflowX: "scroll",
-        }}
-      >
-        {/* web cam1  */}
-        <Box display="flex">
-          <Box minWidth={300} display="flex" flexDirection="column">
-            <Box minHeight={25} display={"inline-flex"}>
-              <img src={camera_icon} width="20px" height="20px" />
+        <Stack
+          display="flex"
+          mt={2}
+          py={3}
+          pl={3}
+          direction="row"
+          width={1}
+          minHeight="40vh"
+          sx={{
+            borderRadius: "10px",
+            backgroundColor: "scgGray.gray3",
+          }}
+          gap="20px"
+        >
+          <Box display="flex" flexDirection="column">
+            <Box display={"inline-flex"}>
+              <img src={table_icon} width="20px" height="20px" />
               <Typography
                 ml={1}
                 fontSize={14}
                 fontWeight={700}
                 color="scgGray.gray1"
               >
-                SCGWS-Converting-CAM74
+                ตารางแสดงข้อมูลการส่งสินค้าของกะเช้า
               </Typography>
             </Box>
             <Stack
               mt={2}
-              direction="row"
               gap={1}
-              flex={1}
+              direction="row"
               sx={{
                 backgroundColor: "scgGray.gray3",
               }}
-              width="30vw"
             >
-              <Box
-                display="flex"
-                style={{
-                  borderRadius: "20px",
-                  border: "1px solid #fff",
-                }}
-                // sx={{ position: "relative" }}
-                height={1}
-                width={1}
-              >
-                <iframe
-                  src={CCTV_Link}
-                  style={{
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: "20px",
-                  }}
-                />
-              </Box>
+              <DisplayDataTable deliveryData={morningDeliveryData} minWidth="30vw" />
             </Stack>
           </Box>
-        </Box>
-        {/* web cam1  */}
 
-        {/* AVG system */}
-        <Stack minWidth={"40vw"}>
-          <Box minHeight={25} display={"inline-flex"}>
-            <img src={truck_loading_icon} width="25px" height="25px" />
-            <Typography
-              ml={1}
-              fontSize={14}
-              fontWeight={700}
-              color="scgGray.gray1"
-            >
-              ระบบ AGV
-            </Typography>
-          </Box>
-          <Stack
-            mt={2}
-            direction="row"
-            flex={1}
-            gap={1}
-            sx={{
-              backgroundColor: "scgGray.gray3",
-            }}
-          >
-            <Box
-              display="flex"
-              style={{
-                borderRadius: "20px",
-                border: "1px solid #fff",
-              }}
-              sx={{ position: "relative" }}
-              height={1}
-              width={1}
-            >
-              <iframe
-                id="agv-iframe"
-                src={AGV_Link}
-                align="middle"
-                style={{
-                  display: "flex",
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: "20px",
-                }}
-              />
+          <Box width={1}>
+            <Box display={"inline-flex"}>
+              <img src={table_icon} width="20px" height="20px" />
+              <Typography
+                ml={1}
+                fontSize={14}
+                fontWeight={700}
+                color="scgGray.gray1"
+              >
+                ตารางแสดงข้อมูลการส่งสินค้าทั้งหมด
+              </Typography>
             </Box>
-          </Stack>
-        </Stack>
-        {/* AVG system */}
 
-        <Stack minHeight={225} flex={1} maxWidth={220}>
-          <Stack minHeight={25} />
-
-          <Stack mt={2} ml={2} gap={2}>
-            <DisplayRackAndDummyBox
-              icon={warehouse_icon}
-              title="Rack"
-              pallets={rackData?.pallet ?? 0}
-              percentage={rackData?.usagePercent ?? 0}
-            />
-            <DisplayRackAndDummyBox
-              icon={product_icon}
-              title="Dummy"
-              pallets={dummyData?.pallet ?? 0}
-              percentage={dummyData?.usagePercent ?? 0}
-            />
-          </Stack>
+            <Stack
+              mt="14px"
+              gap={1}
+              direction="row"
+              sx={{
+                backgroundColor: "scgGray.gray3",
+              }}
+            >
+              <DisplayDataTable
+                deliveryData={allDeliveryData}
+                isAllDelivery
+                minWidth="40vw"
+              />
+              <Stack ml={2} gap={2}>
+                <DisplayRackAndDummyBox
+                  icon={warehouse_icon}
+                  title="Rack"
+                  pallets={rackData?.pallet ?? 0}
+                  percentage={rackData?.usagePercent ?? 0}
+                />
+                <DisplayRackAndDummyBox
+                  icon={dummy_icon}
+                  title="Dummy"
+                  pallets={dummyData?.pallet ?? 0}
+                  percentage={dummyData?.usagePercent ?? 0}
+                />
+              </Stack>
+            </Stack>
+          </Box>
         </Stack>
       </Stack>
-      {/* upper section */}
 
       {/* lower section */}
       <Stack
-        mt={2}
+        mt={5}
         py={3}
         pl={3}
         direction="row"
-        minHeight="360px"
+        minHeight="45vh"
+        gap="8px"
         sx={{
           borderRadius: "10px",
           backgroundColor: "scgGray.gray3",
-          overflow: "hidden",
+          overflowX: "scroll",
         }}
         position="relative"
       >
@@ -273,13 +250,8 @@ const Dashboard_4 = () => {
             <CircularProgress />
           </Box>
         )}
-        <Box display="flex">
-          <Box
-            width={"100%"}
-            display="flex"
-            flex={2}
-            flexDirection="column"
-          >
+        <Box display="flex" gap="10px" minWidth="100px">
+          <Box minWidth={"50vw"} display="flex" flexDirection="column">
             <Box display={"inline-flex"}>
               <img src={table_icon} width="20px" height="20px" />
               <Typography
@@ -294,39 +266,16 @@ const Dashboard_4 = () => {
             <Stack
               mt={2}
               direction="row"
-              gap={1}
+              gap={2}
               sx={{
                 backgroundColor: "scgGray.gray3",
+                overflow: "hidden",
+                overflowX: "scroll",
               }}
             >
               <DisplayDataTable deliveryData={previousDeliveryData} />
               <DisplayDataTable deliveryData={currentDeliveryData} />
               <DisplayDataTable showPlanOnly deliveryData={nextDeliveryData} />
-            </Stack>
-          </Box>
-
-          <Box flex={1} ml={1} display="flex" flexDirection="column">
-            <Box display={"inline-flex"}>
-              <img src={table_icon} width="20px" height="20px" />
-              <Typography
-                ml={1}
-                fontSize={14}
-                fontWeight={700}
-                color="scgGray.gray1"
-              >
-                ตารางแสดงข้อมูลการส่งสินค้าทั้งหมด
-              </Typography>
-            </Box>
-            <Stack
-              mt={2}
-              gap={1}
-              direction="row"
-              sx={{
-                backgroundColor: "scgGray.gray3",
-                flexWrap: "wrap",
-              }}
-            >
-              <DisplayDataTable deliveryData={allDeliveryData} isAllDelivery />
             </Stack>
           </Box>
         </Box>
@@ -335,4 +284,4 @@ const Dashboard_4 = () => {
   );
 };
 
-export default Dashboard_4;
+export default Dashboard_2;

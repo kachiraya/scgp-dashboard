@@ -11,6 +11,7 @@ import Dashboard_1 from "./Pages/Dashboard_1";
 import Dashboard_2 from "./Pages/Dashboard_2";
 import Dashboard_4 from "./Pages/Dashboard_4";
 import Dashboard_5 from "./Pages/Dashboard_5";
+import AGVPage from "./Pages/AGVPage";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: "/dashboard-5",
     element: <Dashboard_5 />,
+  },
+  {
+    path: "/agv",
+    element: <AGVPage />,
   },
 ]);
 

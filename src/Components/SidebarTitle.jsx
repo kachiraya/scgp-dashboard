@@ -13,7 +13,6 @@ const title = [
 const SidebarTitle = () => {
   return (
     <Stack
-      mr={"2px"}
       justifyContent="center"
       alignItems={"center"}
       sx={{
@@ -27,10 +26,12 @@ const SidebarTitle = () => {
           // py={3}
           px={2}
           minWidth={'4vw'}
-          height={i === 3 ? '7vh' : '6vh'}
+          width="100%"
+          height={i === 3 ? '7vh' : '6vh'} // if conveyor
           alignItems="center"
           justifyContent="center"
           color="#fff"
+          border={"1px solid #FFF"}
         >
           <Typography fontSize={14} fontWeight={700}>
             {t}

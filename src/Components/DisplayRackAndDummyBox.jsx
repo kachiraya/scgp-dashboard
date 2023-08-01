@@ -5,32 +5,34 @@ const DisplayRackAndDummyBox = ({ icon, title, pallets, percentage }) => {
   return (
     <Stack
       pt={1}
-      minWidth={220}
+      minWidth={240}
       minHeight={100}
+      height="100%"
       direction="column"
       gap={2}
       alignItems="flex-start"
+      justifyContent="center"
       padding="15px 12px"
       sx={{
-        border: "3px solid #E1E1E3",
+        border: "5px solid #E1E1E3",
         borderRadius: "10px",
       }}
     >
       <Stack direction="row" alignItems="center">
-        <img src={icon} width={"30px"} height={"30px"} />
-        <Typography ml={2} fontSize={14} fontWeight={700} color="#E1E1E3">
+        <img src={icon} width={"60px"} height={"60px"} />
+        <Typography ml={2} fontSize={18} fontWeight={700} color="#E1E1E3">
           {title} :
         </Typography>
-        <Typography fontSize={14} fontWeight={400} color="#E1E1E3" ml={1}>
+        <Typography fontSize={18} fontWeight={700} color="#E1E1E3" ml={1}>
           {pallets} Pallets
         </Typography>
       </Stack>
       <Stack direction="row" alignItems="center">
-        <img src={icon} width={"30px"} height={"30px"} />
-        <Typography ml={2} fontSize={14} fontWeight={700} color="#E1E1E3">
+        <img src={icon} width={"60px"} height={"60px"} />
+        <Typography ml={2} fontSize={18} fontWeight={700} color="#E1E1E3">
           {title} :
         </Typography>
-        <Typography fontSize={14} fontWeight={400} color="#E1E1E3" ml={1}>
+        <Typography fontSize={18} fontWeight={700} color="#E1E1E3" ml={1}>
           {percentage} %
         </Typography>
       </Stack>

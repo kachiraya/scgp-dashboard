@@ -8,7 +8,7 @@ import AppMenuDrawer from "../Components/AppMenuDrawer";
 import table_icon from "../assets/table_icon.svg";
 import warehouse_icon from "../assets/warehouse_icon.svg";
 import product_icon from "../assets/product_icon.svg";
-import truck_loading_icon from "../assets/truck_loading_icon.svg";
+import dummy_icon from "../assets/dummy_icon.svg";
 import rollpaper_icon from "../assets/rollpaper_icon.svg";
 import wms_example from "../assets/example/wms-example.png";
 import agv_example from "../assets/example/agv-example.png";
@@ -17,17 +17,17 @@ import { useLocation } from "react-router-dom";
 import { apiService } from "../apiService";
 import { API_BASE_URL } from "../config";
 
-const AGV_Link = "http://172.29.159.56/#/en/map";
-
 const Dashboard_2 = () => {
   const location = useLocation();
   const [rackData, setRackdata] = useState(null);
   const [dummyData, setDummydata] = useState(null);
   const [allDeliveryData, setAllDeliveryData] = useState(null);
+  const [morningDeliveryData, setMorningDeliveryData] = useState(null);
   const [previousDeliveryData, setPreviousDeliveryData] = useState(null);
   const [currentDeliveryData, setCurrentDeliveryData] = useState(null);
   const [nextDeliveryData, setNextDeliveryData] = useState(null);
   const [firstLoad, setFirstLoad] = useState(true);
+  const [didRotateMap, setDidRotateMap] = useState(false);
 
   useEffect(() => {
     setFirstLoad(true);
@@ -37,68 +37,14 @@ const Dashboard_2 = () => {
       getDeliveryData();
     }, 30000); // request every 30 secs
 
-    const iframe = document.getElementById("agv-iframe");
-    iframe.addEventListener("load", customizeAGVMapWebView, true);
-
-    setTimeout(() => {
-      customizeAGVMapWebView();
-    }, 3000);
-
     return () => {
       clearInterval(intervalId);
 
-      iframe.removeEventListener("load", () => {
-        console.log("remove load event");
-      });
+      // iframe.removeEventListener("load", () => {
+      //   console.log("remove load event");
+      // });
     };
   }, [location]);
-
-  const customizeAGVMapWebView = () => {
-    console.log("on load iframe completed!");
-    const agvIframe = document.getElementById("agv-iframe");
-
-    const agvMapElem = agvIframe.contentWindow?.document?.getElementById("map");
-    if (agvMapElem) {
-      console.log("map available!");
-      agvMapElem.style.transform = "rotate(90deg)";
-      agvMapElem.scrollIntoView({
-        block: "center",
-        inline: "center",
-      });
-    }
-
-    const agvHeaders =
-      agvIframe.contentWindow?.document?.getElementsByClassName(
-        "app-Header.app-header-live"
-      );
-    if (agvHeaders && agvHeaders.length > 0) {
-      agvHeaders[0].remove();
-    }
-
-    const agvGutters =
-      agvIframe.contentWindow?.document?.getElementsByClassName(
-        "gutter.gutter-vertical"
-      );
-    if (agvGutters && agvGutters.length > 0) {
-      agvGutters[0].remove();
-    }
-
-    const agvTableContainers =
-      agvIframe.contentWindow?.document?.getElementsByClassName(
-        "table-container"
-      );
-    if (agvTableContainers && agvTableContainers.length > 0) {
-      agvTableContainers[0].remove();
-    }
-
-    const agvHistoryLiveToggle =
-      agvIframe.contentWindow?.document?.getElementsByClassName(
-        "history-live-toggle"
-      );
-    if (agvHistoryLiveToggle && agvHistoryLiveToggle.length > 0) {
-      agvHistoryLiveToggle[0].remove();
-    }
-  };
 
   const getDeliveryData = () => {
     apiService
@@ -112,6 +58,7 @@ const Dashboard_2 = () => {
         setNextDeliveryData(responseData.nextDeliveryData ?? null);
 
         setAllDeliveryData(responseData.allDeliveryData ?? null);
+        setMorningDeliveryData(responseData.morningDeliveryData ?? null);
 
         // if (isError) {
         // showInfoToast("Connection Restored")
@@ -120,7 +67,7 @@ const Dashboard_2 = () => {
         setFirstLoad(false);
       })
       .catch((err) => {
-        if (isError) return;
+        // if (isError) return;
         // showErrorToast(err.message);
         // setIsError(true);
       });
@@ -141,7 +88,7 @@ const Dashboard_2 = () => {
         // }
       })
       .catch((err) => {
-        if (isError) return;
+        // if (isError) return;
         // showErrorToast(err.message);
         // setIsError(true);
       });
@@ -195,7 +142,7 @@ const Dashboard_2 = () => {
             <CircularProgress />
           </Box>
         )}
-        <Box display="flex" gap="8px" pr="8px">
+        <Box display="flex" gap="10px" minWidth="100px">
           <Box minWidth={"50vw"} display="flex" flexDirection="column">
             <Box display={"inline-flex"}>
               <img src={table_icon} width="20px" height="20px" />
@@ -211,7 +158,7 @@ const Dashboard_2 = () => {
             <Stack
               mt={2}
               direction="row"
-              gap={1}
+              gap={2}
               sx={{
                 backgroundColor: "scgGray.gray3",
                 overflow: "hidden",
@@ -223,7 +170,74 @@ const Dashboard_2 = () => {
               <DisplayDataTable showPlanOnly deliveryData={nextDeliveryData} />
             </Stack>
           </Box>
+        </Box>
+      </Stack>
+
+      {/* upper section */}
+
+      {/* bottom section */}
+      <Stack direction="row" gap={2} position="relative">
+        {firstLoad && (
+          <Box
+            display="flex"
+            position="absolute"
+            width="100%"
+            height="100%"
+            minHeight="45vh"
+            sx={{
+              backgroundColor: "rgba(0,0,0,0.2)",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backdropFilter: "blur(1px)",
+            }}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <CircularProgress />
+          </Box>
+        )}
+
+        <Stack
+          display="flex"
+          mt={2}
+          py={3}
+          pl={3}
+          direction="row"
+          width={1}
+          minHeight="40vh"
+          sx={{
+            borderRadius: "10px",
+            backgroundColor: "scgGray.gray3",
+          }}
+          gap="20px"
+        >
           <Box display="flex" flexDirection="column">
+            <Box display={"inline-flex"}>
+              <img src={table_icon} width="20px" height="20px" />
+              <Typography
+                ml={1}
+                fontSize={14}
+                fontWeight={700}
+                color="scgGray.gray1"
+              >
+                ตารางแสดงข้อมูลการส่งสินค้าของกะเช้า
+              </Typography>
+            </Box>
+            <Stack
+              mt={2}
+              gap={1}
+              direction="row"
+              sx={{
+                backgroundColor: "scgGray.gray3",
+              }}
+            >
+              <DisplayDataTable deliveryData={morningDeliveryData} minWidth="30vw" />
+            </Stack>
+          </Box>
+
+          <Box width={1}>
             <Box display={"inline-flex"}>
               <img src={table_icon} width="20px" height="20px" />
               <Typography
@@ -235,15 +249,20 @@ const Dashboard_2 = () => {
                 ตารางแสดงข้อมูลการส่งสินค้าทั้งหมด
               </Typography>
             </Box>
+
             <Stack
-              mt={2}
+              mt="14px"
               gap={1}
               direction="row"
               sx={{
                 backgroundColor: "scgGray.gray3",
               }}
             >
-              <DisplayDataTable deliveryData={allDeliveryData} isAllDelivery />
+              <DisplayDataTable
+                deliveryData={allDeliveryData}
+                isAllDelivery
+                minWidth="40vw"
+              />
               <Stack ml={2} gap={2}>
                 <DisplayRackAndDummyBox
                   icon={warehouse_icon}
@@ -252,7 +271,7 @@ const Dashboard_2 = () => {
                   percentage={rackData?.usagePercent ?? 0}
                 />
                 <DisplayRackAndDummyBox
-                  icon={product_icon}
+                  icon={dummy_icon}
                   title="Dummy"
                   pallets={dummyData?.pallet ?? 0}
                   percentage={dummyData?.usagePercent ?? 0}
@@ -260,125 +279,6 @@ const Dashboard_2 = () => {
               </Stack>
             </Stack>
           </Box>
-        </Box>
-      </Stack>
-
-      {/* upper section */}
-      <Stack direction="row" gap={2}>
-        <Stack
-          display="flex"
-          mt={2}
-          py={3}
-          pl={3}
-          direction="row"
-          minWidth="65%"
-          minHeight="40vh"
-          sx={{
-            borderRadius: "10px",
-            backgroundColor: "scgGray.gray3",
-          }}
-        >
-          <Stack display="flex" flex={1}>
-            <Box display={"inline-flex"}>
-              <img src={warehouse_icon} width="25px" height="25px" />
-              <Typography
-                ml={1}
-                fontSize={14}
-                fontWeight={700}
-                color="scgGray.gray1"
-              >
-                ระบบ WMS
-              </Typography>
-            </Box>
-            <img
-              src={wms_example}
-              mt={3}
-              width="100%"
-              height={"100%"}
-              style={{
-                marginTop: "16px",
-                borderRadius: "20px",
-                border: "1px solid #fff",
-                objectFit: "cover",
-                aspectRatio: "16/9",
-              }}
-            />
-          </Stack>
-
-          <Stack display="flex" flex={1} ml={2} mr={2}>
-            <Box display={"inline-flex"}>
-              <img src={truck_loading_icon} width="25px" height="25px" />
-              <Typography
-                ml={1}
-                fontSize={14}
-                fontWeight={700}
-                color="scgGray.gray1"
-              >
-                ระบบ AGV
-              </Typography>
-            </Box>
-            <Box
-              display="flex"
-              style={{
-                marginTop: "16px",
-                borderRadius: "20px",
-                border: "1px solid #fff",
-              }}
-              // sx={{ position: "relative" }}
-              height={1}
-              width={1}
-            >
-              <iframe
-                id="agv-iframe"
-                src={AGV_Link}
-                align="middle"
-                style={{
-                  display: "flex",
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: "20px",
-                }}
-                onLoadedData={customizeAGVMapWebView}
-              />
-            </Box>
-          </Stack>
-        </Stack>
-
-        <Stack
-          mt={2}
-          py={3}
-          pl={3}
-          direction="row"
-          flex={1}
-          // minWidth="33.6%"
-          minHeight="360px"
-          sx={{
-            borderRadius: "10px",
-            backgroundColor: "scgGray.gray3",
-          }}
-        >
-          <Stack>
-            <Box display={"inline-flex"}>
-              <img src={rollpaper_icon} width="25px" height="25px" />
-              <Typography
-                ml={1}
-                fontSize={14}
-                fontWeight={700}
-                color="scgGray.gray1"
-              >
-                Roll Paper
-              </Typography>
-            </Box>
-            {/* <img
-              width={370}
-              height={270}
-              style={{
-                marginTop: "16px",
-                borderRadius: "20px",
-                border: "1px solid #fff",
-              }}
-            /> */}
-          </Stack>
         </Stack>
       </Stack>
     </Stack>

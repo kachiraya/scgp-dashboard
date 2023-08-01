@@ -34,6 +34,7 @@ const menuItems = [
   { name: "Dashboard 2,3", path: "/dashboard-2" },
   { name: "Dashboard 4", path: "/dashboard-4" },
   { name: "Dashboard 5", path: "/dashboard-5" },
+  { name: "AGV", path: "/agv" },
 ];
 
 function AppMenuDrawer({ mode }) {

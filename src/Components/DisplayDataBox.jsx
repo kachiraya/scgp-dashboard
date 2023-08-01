@@ -7,7 +7,7 @@ const DisplayDataBox = ({
   height,
   backgroundColor,
   data,
-  fonSize,
+  fontSize,
   my,
   mx,
   ml,
@@ -18,17 +18,17 @@ const DisplayDataBox = ({
     <Stack
       my={my}
       ml={ml}
-      width={width}
+      width={width ?? "100%"}
       height={height}
       justifyContent="center"
       alignItems={"center"}
       sx={{
         backgroundColor: backgroundColor,
-        borderRadius: "3px",
         flex:flex
       }}
+      border={"1px solid #FFF"}
     >
-      <Typography fontSize={fonSize} fontWeight={700} color={color} >
+      <Typography fontSize={fontSize} fontWeight={700} color={color} >
         {data}
       </Typography>
     </Stack>

@@ -1,18 +1,80 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { apiService } from "../apiService";
+import { toast } from "react-toastify";
+import { API_BASE_URL } from "../config";
+
+import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import AppMenuDrawer from "../Components/AppMenuDrawer";
 import table_icon from "../assets/table_icon.svg";
-import truck_loading_icon from "../assets/truck_loading_icon.svg";
-import warehouse_icon from "../assets/warehouse_icon.svg";
-import product_icon from "../assets/product_icon.svg";
-import agv_example from "../assets/example/agv-example.png";
 import ShipmentTableTitle from "../Components/ShipmentTableTitle";
 import ShipmentTableData from "../Components/ShipmentTableData";
-import DummyBox from "../Components/DummyBox";
-import RackBox from "../Components/RackBox";
 
 const AGV_Link = "http://172.29.159.56/#/en/map";
 
+const emptyData = {
+  forkliftNumber: null,
+  shipmentNo: null,
+  onGoingTime: null,
+  expectedTime: null,
+  status: null,
+  destination: null,
+};
+
 const Dashboard_5 = () => {
+  const location = useLocation();
+
+  const [count, setCount] = useState(0);
+  const [dumpData, setDumpData] = useState([]);
+  const [displayData, setDisplayData] = useState([]);
+  const [firstLoad, setFirstLoad] = useState(true);
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    getData();
+
+    const intervalId = setInterval(getData, 30000); // request every 30 secs
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [location]);
+
+  useEffect(() => {
+    let taskAssignData = dumpData ?? [];
+    const dataCount = taskAssignData.length;
+    if (dataCount < 10) {
+      for (let i = 0; i < 10 - dataCount; i++) {
+        taskAssignData.push(emptyData);
+      }
+    }
+
+    setDisplayData(taskAssignData.slice(0, 10));
+  }, [dumpData]);
+
+  const getData = () => {
+    apiService
+      .get(`${API_BASE_URL}/task-assign-data`)
+      .then((response) => {
+        const responseData = response.data;
+        setCount(responseData.count ?? 0);
+
+        let taskAssignData = responseData.taskAssignData ?? [];
+        setDumpData(taskAssignData);
+
+        if (isError) {
+          // showInfoToast("Connection Restored")
+          setIsError(false);
+        }
+        setFirstLoad(false);
+      })
+      .catch((err) => {
+        if (isError) return;
+        // showErrorToast(err.message);
+        setIsError(true);
+      });
+  };
+
   return (
     <Stack
       minHeight="100vh"
@@ -26,151 +88,49 @@ const Dashboard_5 = () => {
         <AppMenuDrawer mode="dark" />
       </Stack>
 
-      <Stack direction="row" gap="16px" minHeight="360px">
-        {/* AGV system */}
-        <Stack
-          mt={5}
-          py={3}
-          minHeight="45vh"
-          pl={3}
-          flex={2}
-          sx={{
-            borderRadius: "10px",
-            backgroundColor: "scgGray.gray3",
-            overflow: "hidden",
-          }}
-        >
-          <Box minHeight={25} display={"inline-flex"}>
-            <img src={truck_loading_icon} width="25px" height="25px" />
-            <Typography
-              ml={1}
-              fontSize={14}
-              fontWeight={700}
-              color="scgGray.gray1"
-            >
-              ระบบ AGV
-            </Typography>
-          </Box>
-          <Stack
-            mt={2}
-            direction="row"
-            gap={1}
-            sx={{
-              backgroundColor: "scgGray.gray3",
-            }}
-            height={1}
-          >
-            <Box
-              display="flex"
-              style={{
-                borderRadius: "20px",
-                border: "1px solid #fff",
-              }}
-              // sx={{ position: "relative" }}
-              height={1}
-              width="95%"
-            >
-              <iframe
-                id="agv-iframe"
-                src={AGV_Link}
-                align="middle"
-                style={{
-                  display: "flex",
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: "20px",
-                }}
-              />
-            </Box>
-          </Stack>
-        </Stack>
-        {/* AGV system */}
-
-        {/* Dummy */}
-        <Stack
-          mt={5}
-          py={3}
-          pl={3}
-          flex={1.5}
-          sx={{
-            borderRadius: "10px",
-            backgroundColor: "scgGray.gray3",
-            overflow: "hidden",
-          }}
-        >
-          <Box minHeight={25} display={"inline-flex"}>
-            <img src={warehouse_icon} width="25px" height="25px" />
-            <Typography
-              ml={1}
-              fontSize={14}
-              fontWeight={700}
-              color="scgGray.gray1"
-            >
-              Dummy
-            </Typography>
-          </Box>
-          <Stack direction="row" gap="8px" height={"100%"}>
-            <Stack flex={1} justifyContent="center">
-              <img width={150} height={150} src={warehouse_icon} />
-            </Stack>
-            <Stack mr={2} flex={1} gap="4px">
-              <DummyBox number={"0100441101"} />
-              <DummyBox number={"0100441101"} />
-              <DummyBox number={"0100441101"} />
-            </Stack>
-          </Stack>
-        </Stack>
-
-        {/* Dummy */}
-
-        {/* Rack */}
-        <Stack
-          mt={5}
-          py={3}
-          pl={3}
-          flex={2}
-          sx={{
-            borderRadius: "10px",
-            backgroundColor: "scgGray.gray3",
-            overflow: "hidden",
-          }}
-        >
-          <Box minHeight={25} display={"inline-flex"}>
-            <img src={product_icon} width="25px" height="25px" />
-            <Typography
-              ml={1}
-              fontSize={14}
-              fontWeight={700}
-              color="scgGray.gray1"
-            >
-              Rack
-            </Typography>
-          </Box>
-          <Stack mt={3} direction="row" gap="8px">
-            <RackBox number="0100441101" ocNumber="oc3" />
-            <RackBox number="0100441101" ocNumber="oc3" />
-            <RackBox number="0100441101" ocNumber="oc3" />
-          </Stack>
-        </Stack>
-      </Stack>
-
-      {/* Rack */}
-
       <Stack
         mt={2}
         py={3}
-        pl={3}
+        px={3}
         direction="row"
         minHeight="360px"
         gap="16px"
         sx={{
           borderRadius: "10px",
           backgroundColor: "scgGray.gray3",
-          overflow: "hidden",
+          overflow: "scroll",
         }}
+        position="relative"
       >
-        <Box display="flex">
-          <Box minWidth={300} display="flex" flexDirection="column">
+        {firstLoad && (
+          <Box
+            display="flex"
+            position="absolute"
+            width="100%"
+            height="100%"
+            minHeight="45vh"
+            sx={{
+              backgroundColor: "rgba(0,0,0,0.2)",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backdropFilter: "blur(1px)",
+            }}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <CircularProgress />
+          </Box>
+        )}
+        <Box display="flex" width={1}>
+          <Box
+            minWidth={800}
+            width={1}
+            display="flex"
+            flexDirection="column"
+            overflow="scroll"
+          >
             <Box minHeight={25} display={"inline-flex"}>
               <img src={table_icon} width="20px" height="20px" />
               <Typography
@@ -182,32 +142,26 @@ const Dashboard_5 = () => {
                 ตารางแสดงข้อมูลการรับส่งสินค้า
               </Typography>
             </Box>
-            <Stack mt={3} direction="row">
+            <Stack
+              mt={3}
+              width={1}
+              direction="column"
+              sx={{
+                overflow: "hidden",
+                borderRadius: "24px",
+                border: "1px solid #FFF",
+              }}
+            >
               <ShipmentTableTitle />
-              <ShipmentTableData
-                shipmentNumber="0100441101"
-                folkliftNumber="NO.1"
-                stockNumber="MIX"
-                destination="A1"
-              />
-              <ShipmentTableData
-                shipmentNumber="0100441101"
-                folkliftNumber="NO.1"
-                stockNumber="MIX"
-                destination="A1"
-              />
-              <ShipmentTableData
-                shipmentNumber="0100441101"
-                folkliftNumber="NO.1"
-                stockNumber="MIX"
-                destination="A1"
-              />
-              <ShipmentTableData
-                shipmentNumber="0100441101"
-                folkliftNumber="NO.1"
-                stockNumber="MIX"
-                destination="A1"
-              />
+              {displayData.map((data, index) => {
+                return (
+                  <ShipmentTableData
+                    key={`record-${data.shipmentNo}-${index}`}
+                    data={data}
+                    index={index}
+                  />
+                );
+              })}
             </Stack>
           </Box>
         </Box>

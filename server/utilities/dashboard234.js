@@ -8,13 +8,14 @@ export const getTimeByHour = (hour) => {
 };
 
 export const getShiftStartEndHours = (currentHour) => {
-  if (currentHour >= 7 && currentHour < 16) {
-    return { start: 7, end: 16 };
+  if (currentHour >= 8 && currentHour < 16) {
+    return { start: 8, end: 16 };
   } else if (currentHour >= 16 && currentHour < 24) {
     return { start: 16, end: 24 };
-  } else if (currentHour >= 0 && currentHour < 7) {
-    return { start: 0, end: 7 };
+  } else if (currentHour >= 0 && currentHour < 8) {
+    return { start: 0, end: 8 };
   }
+
   return { start: currentHour, end: currentHour };
 };
 

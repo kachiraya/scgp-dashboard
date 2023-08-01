@@ -7,6 +7,7 @@ import {
   getEstimatedTimeStr,
   getStatus,
   isToday,
+  status,
 } from "./utilities/dashboard1.js";
 import {
   calculateAllWarehouseDelivery,
@@ -52,7 +53,7 @@ app.get("/lms-data", (request, response) => {
     if (err) console.log(err);
     // console.log(records);
     if (!records) {
-      console.log("Cannot retrieve record");
+      console.log("Cannot retrieve LMS records");
       return;
     }
 
@@ -90,12 +91,26 @@ app.get("/lms-data", (request, response) => {
         location: `A${record.LOCATION_ID}`,
       };
     });
-    // filter out records that already exit the warehouse (status > 4 or Time_exitWH exists)
-    // const warehouseLMSData = lmsData.filter((record) => { return record.status !== status.COMPLETED })
+
+    const processingLMSData = lmsData.filter((record) => {
+      return record.status !== status.COMPLETED;
+    });
+    const completedLMSData = lmsData.filter((record) => {
+      return record.status === status.COMPLETED;
+    });
     const warehouseLMSData =
-      lmsData.length > 10
-        ? lmsData.slice(lmsData.length - 10, lmsData.length)
-        : lmsData;
+      processingLMSData > 10
+        ? processingLMSData.slice(0, 10)
+        : completedLMSData
+            .slice(
+              completedLMSData.length - (10 - processingLMSData.length),
+              completedLMSData.length
+            )
+            .concat(processingLMSData);
+    // const warehouseLMSData =
+    //   lmsData.length > 10
+    //     ? lmsData.slice(lmsData.length - 10, lmsData.length)
+    //     : lmsData;
     response.json({ count: lmsData.length, lmsData: warehouseLMSData });
   });
 });
@@ -103,24 +118,26 @@ app.get("/lms-data", (request, response) => {
 app.get("/warehouse-progress", async (request, response) => {
   var request = new database.Request();
 
-  const [plsTableData, wmsTableData] =
-    await Promise.all([
-      request.query(
-        "select Time_Plus1H, Delivery_type, Location, User_Create_Date, Batch_Number from V_PLSData"
-      ),
-      // WMS: today's record
-      request.query(
-        "select cre_date, location_name, storage, pallet_length, batchno, locationtime from V_STOCKWMS WHERE CAST(cre_date AS DATE) = CAST(GETDATE() AS DATE) AND location_name != 'PROD' ORDER BY locationtime"
-      ),
-    ]);
-
   const date = new Date();
   const currentHour = date.getHours();
+
+  const [plsTableData, wmsTableData] = await Promise.all([
+    request.query(
+      "select Time_Plus1H, Delivery_type, Location, User_Create_Date, Batch_Number from V_PLSData"
+    ),
+    // WMS: today's record
+    request.query(
+      currentHour >= 8
+        ? "select cre_date, location_name, storage, pallet_length, batchno, locationtime from V_STOCKWMS WHERE CAST(cre_date AS DATE) = CAST(GETDATE() AS DATE) AND location_name != 'PROD' ORDER BY locationtime"
+        : "select cre_date, location_name, storage, pallet_length, batchno, locationtime from V_STOCKWMS WHERE CAST(cre_date AS DATE) between CAST( GETDATE() -1 AS DATE) and CAST( GETDATE() AS DATE) AND location_name != 'PROD' ORDER BY locationtime"
+    ),
+  ]);
 
   const plsData = plsTableData.recordset ?? [];
   const wmsData = wmsTableData.recordset ?? [];
 
   const { start, end } = getShiftStartEndHours(currentHour);
+  console.log("current hour", currentHour);
   const deliveryData = calculateAllWarehouseDelivery(
     plsData,
     wmsData,
@@ -130,6 +147,21 @@ app.get("/warehouse-progress", async (request, response) => {
   const allDeliveryData = {
     time_range: `${getTimeByHour(start)}-${getTimeByHour(end)}`,
     ...deliveryData,
+  };
+
+  const { start: morningShiftStart, end: morningShiftEnd } =
+    getShiftStartEndHours(8);
+  const morningDeliveryData = calculateAllWarehouseDelivery(
+    plsData,
+    wmsData,
+    morningShiftStart,
+    morningShiftEnd
+  );
+  const morningShiftDeliveryData = {
+    time_range: `${getTimeByHour(morningShiftStart)}-${getTimeByHour(
+      morningShiftEnd
+    )}`,
+    ...morningDeliveryData,
   };
 
   const previousData = calculateAllWarehouseDelivery(
@@ -180,17 +212,17 @@ app.get("/warehouse-progress", async (request, response) => {
     currentDeliveryData: currentDeliveryData,
     nextDeliveryData: nextDeliveryData,
     allDeliveryData: allDeliveryData,
+    morningDeliveryData: morningShiftDeliveryData,
   });
 });
 
 app.get("/warehouse-percentage", async (request, response) => {
   var request = new database.Request();
 
-  const [percentUsageData, palletDummyUsageData] =
-    await Promise.all([
-      request.query("select * from V_PercentUsage"),
-      request.query("select * from V_PalletDummy"),
-    ]);
+  const [percentUsageData, palletDummyUsageData] = await Promise.all([
+    request.query("select * from V_PercentUsage"),
+    request.query("select * from V_PalletDummy"),
+  ]);
 
   // rack
   const percentageData =
@@ -216,6 +248,92 @@ app.get("/warehouse-percentage", async (request, response) => {
     rack: rackData,
     dummy: dummyData,
   });
+});
+
+app.get("/task-assign-data", async (request, response) => {
+  var request = new database.Request();
+
+  const [lmsTableData, taskAssignTableData] = await Promise.all([
+    request.query("select * from V_LMSDATA"),
+    // Task Assign
+    request.query("select * from V_TaskAssign"),
+  ]);
+
+  const data = lmsTableData?.recordset ?? [];
+  const averageSetupTime = getAverageSetupTime(data);
+  const todayLMSData = data.filter(
+    (record) => record.SHIPMENTDATE && isToday(record.SHIPMENTDATE)
+  );
+  const uniqueLMSData = [
+    ...new Map(todayLMSData.map((item) => [item.SHIPMENTNO, item])).values(),
+  ];
+
+  const lmsData = uniqueLMSData.map((record) => {
+    const finishTime = record.FINISHPICKING
+      ? formatDateToTimeStr(record.FINISHPICKING)
+      : getEstimatedTimeStr(
+          record.STARTPICKING_DATE,
+          averageSetupTime[record.TRUCKTYPE]
+        );
+    return {
+      id: `${record.SHIPMENTNO}-${record.DPNO}`,
+      truck_id: record.TRUCKID,
+      shipment_no: record.SHIPMENTNO,
+      truck_wait_time: formatDateToTimeStr(record.TIMESTATUS2_4),
+      picking_date: {
+        start: formatDateToTimeStr(record.STARTPICKING_DATE),
+        estimate_finish: finishTime,
+      },
+      status: getStatus(
+        record.STARTPICKING_DATE,
+        record.FINISHPICKING,
+        record.Time_arriveWH,
+        record.Time_exitWH
+      ),
+      location: `A${record.LOCATION_ID}`,
+    };
+  });
+
+  const processingLMSData = lmsData.filter((record) => {
+    return record.status !== status.COMPLETED;
+  });
+  const completedLMSData = lmsData.filter((record) => {
+    return record.status === status.COMPLETED;
+  });
+  const warehouseLMSData =
+    processingLMSData > 10
+      ? processingLMSData.slice(0, 10)
+      : completedLMSData
+          .slice(
+            completedLMSData.length - (10 - processingLMSData.length),
+            completedLMSData.length
+          )
+          .concat(processingLMSData);
+
+  const taskAssignData = taskAssignTableData?.recordset ?? [];
+  const taskAssignList = warehouseLMSData.map((record) => {
+    const taskAssignRecords = taskAssignData.reduce((prev, curr) => {
+      if (curr.ShipmentNo === record.shipment_no) {
+        const status =
+          current.Status === "MIX" || prev.sloc === "MIX"
+            ? "MIX"
+            : current.Status;
+        const pickupLocation = curr.GI_Conveyor
+          ? [prev.pickup_location, curr.GI_Conveyor].join("+")
+          : curr.GI_Conveyor;
+        return {
+          shipment_no: current.ShipmentNo,
+          forkLift_no: current.CarCode,
+          sloc: status,
+          pickup_location: pickupLocation,
+        };
+      }
+      return prev;
+    }, {});
+    return { ...record, ...taskAssignRecords };
+  });
+
+  response.json({ count: lmsData.length, taskAssignData: taskAssignList });
 });
 
 export default app;
