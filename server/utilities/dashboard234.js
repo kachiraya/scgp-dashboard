@@ -76,7 +76,8 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
       createTime >= start &&
       createTime < end &&
       record.location_name !== "Dummy" &&
-      (record.storage === "W9" && joinedPlsRecord.Location === "W9") &&
+      record.storage === "W9" &&
+      joinedPlsRecord.Location === "W9" &&
       record.pallet_length < 47
     );
   });
@@ -118,7 +119,8 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
       createTime >= start &&
       createTime < end &&
       record.location_name === "Dummy" &&
-      (record.storage === "9" && joinedPlsRecord.Location === "9") &&
+      record.storage === "9" &&
+      joinedPlsRecord.Location === "9" &&
       record.pallet_length >= 47
     );
   });
@@ -149,10 +151,18 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
 
   // Remaining
   const remainingConveyorCount =
-    fGConveyorCount -
-    (doingPalletConveyorCount + doingPalletConveyorDummyCount);
-  const remainingDoingCount = fGDummyCount - doingPalletDummyCount;
-  const remainingExportCount = fGExportCount - doingPalletExportCount;
+    fGConveyorCount < doingPalletConveyorCount + doingPalletConveyorDummyCount
+      ? fGConveyorCount -
+        (doingPalletConveyorCount + doingPalletConveyorDummyCount)
+      : 0;
+  const remainingDoingCount =
+    fGDummyCount < doingPalletDummyCount
+      ? fGDummyCount - doingPalletDummyCount
+      : 0;
+  const remainingExportCount =
+    fGExportCount < doingPalletExportCount
+      ? fGExportCount - doingPalletExportCount
+      : 0;
 
   const fgCount = fGConveyorCount + fGDummyCount + fGExportCount;
   const doingCount =
