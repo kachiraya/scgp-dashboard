@@ -71,7 +71,7 @@ const ShipmentTableData = ({ data, index }) => {
         }}
       >
         <Typography fontSize={20} fontWeight={600} color="#292A31">
-          {data?.forklift_no ?? "-"}
+          {data?.forkLift_no ?? "-"}
         </Typography>
       </Stack>
       <Stack

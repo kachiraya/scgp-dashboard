@@ -312,13 +312,13 @@ app.get("/task-assign-data", async (request, response) => {
 
   const taskAssignData = taskAssignTableData?.recordset ?? [];
   const taskAssignList = warehouseLMSData.map((record) => {
-    const taskAssignRecords = taskAssignData.reduce((prev, curr) => {
+    let taskAssignRecords = taskAssignData.reduce((prev, curr) => {
       if (curr.ShipmentNo === record.shipment_no) {
         const status =
         curr.Status === "MIX" || prev.sloc === "MIX"
             ? "MIX"
             : curr.Status;
-        const pickupLocation = curr.GI_Conveyor
+        const pickupLocation = curr.GI_Conveyor && prev.pickup_location
           ? [prev.pickup_location, curr.GI_Conveyor].join("+")
           : curr.GI_Conveyor;
         return {
@@ -330,6 +330,10 @@ app.get("/task-assign-data", async (request, response) => {
       }
       return prev;
     }, {});
+
+    if (taskAssignRecords.sloc === "MIX") {
+      taskAssignRecords.pickup_location = `${taskAssignRecords.pickup_location}+Dummy`
+    }
     return { ...record, ...taskAssignRecords };
   });
 
