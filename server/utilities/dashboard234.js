@@ -151,16 +151,16 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
 
   // Remaining
   const remainingConveyorCount =
-    fGConveyorCount < doingPalletConveyorCount + doingPalletConveyorDummyCount
+    fGConveyorCount > doingPalletConveyorCount + doingPalletConveyorDummyCount
       ? fGConveyorCount -
         (doingPalletConveyorCount + doingPalletConveyorDummyCount)
       : 0;
   const remainingDoingCount =
-    fGDummyCount < doingPalletDummyCount
+    fGDummyCount > doingPalletDummyCount
       ? fGDummyCount - doingPalletDummyCount
       : 0;
   const remainingExportCount =
-    fGExportCount < doingPalletExportCount
+    fGExportCount > doingPalletExportCount
       ? fGExportCount - doingPalletExportCount
       : 0;
 
