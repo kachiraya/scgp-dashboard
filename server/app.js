@@ -315,15 +315,15 @@ app.get("/task-assign-data", async (request, response) => {
     const taskAssignRecords = taskAssignData.reduce((prev, curr) => {
       if (curr.ShipmentNo === record.shipment_no) {
         const status =
-          current.Status === "MIX" || prev.sloc === "MIX"
+        curr.Status === "MIX" || prev.sloc === "MIX"
             ? "MIX"
-            : current.Status;
+            : curr.Status;
         const pickupLocation = curr.GI_Conveyor
           ? [prev.pickup_location, curr.GI_Conveyor].join("+")
           : curr.GI_Conveyor;
         return {
-          shipment_no: current.ShipmentNo,
-          forkLift_no: current.CarCode,
+          shipment_no: curr.ShipmentNo,
+          forkLift_no: curr.CarCode,
           sloc: status,
           pickup_location: pickupLocation,
         };
