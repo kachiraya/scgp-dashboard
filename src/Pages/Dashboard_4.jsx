@@ -22,7 +22,7 @@ const Dashboard_2 = () => {
   const [rackData, setRackdata] = useState(null);
   const [dummyData, setDummydata] = useState(null);
   const [allDeliveryData, setAllDeliveryData] = useState(null);
-  const [morningDeliveryData, setMorningDeliveryData] = useState(null);
+  const [previousShiftDeliveryData, setPreviousShiftDeliveryData] = useState(null);
   const [previousDeliveryData, setPreviousDeliveryData] = useState(null);
   const [currentDeliveryData, setCurrentDeliveryData] = useState(null);
   const [nextDeliveryData, setNextDeliveryData] = useState(null);
@@ -58,7 +58,7 @@ const Dashboard_2 = () => {
         setNextDeliveryData(responseData.nextDeliveryData ?? null);
 
         setAllDeliveryData(responseData.allDeliveryData ?? null);
-        setMorningDeliveryData(responseData.morningDeliveryData ?? null);
+        setPreviousShiftDeliveryData(responseData.previousShiftDeliveryData ?? null);
 
         // if (isError) {
         // showInfoToast("Connection Restored")
@@ -154,7 +154,7 @@ const Dashboard_2 = () => {
                 fontWeight={700}
                 color="scgGray.gray1"
               >
-                ตารางแสดงข้อมูลการส่งสินค้าของกะเช้า
+                ตารางแสดงข้อมูลการส่งสินค้าของกะก่อนหน้า
               </Typography>
             </Box>
             <Stack
@@ -165,7 +165,7 @@ const Dashboard_2 = () => {
                 backgroundColor: "scgGray.gray3",
               }}
             >
-              <DisplayDataTable deliveryData={morningDeliveryData} minWidth="32vw" />
+              <DisplayDataTable deliveryData={previousShiftDeliveryData} minWidth="32vw" />
             </Stack>
           </Box>
 

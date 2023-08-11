@@ -19,6 +19,18 @@ export const getShiftStartEndHours = (currentHour) => {
   return { start: currentHour, end: currentHour };
 };
 
+export const getPreviousShiftStartEndHours = (currentHour) => {
+  if (currentHour >= 8 && currentHour < 16) {
+    return { start: 0, end: 8 };
+  } else if (currentHour >= 16 && currentHour < 24) {
+    return { start: 8, end: 16 };
+  } else if (currentHour >= 0 && currentHour < 8) {
+    return { start: 16, end: 24 };
+  }
+
+  return { start: currentHour, end: currentHour };
+};
+
 export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
   console.log(`start: ${start} -- end: ${end}`);
   // FGs/Planning

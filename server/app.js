@@ -11,6 +11,7 @@ import {
 } from "./utilities/dashboard1.js";
 import {
   calculateAllWarehouseDelivery,
+  getPreviousShiftStartEndHours,
   getShiftStartEndHours,
   getTimeByHour,
 } from "./utilities/dashboard234.js";
@@ -149,19 +150,19 @@ app.get("/warehouse-progress", async (request, response) => {
     ...deliveryData,
   };
 
-  const { start: morningShiftStart, end: morningShiftEnd } =
-    getShiftStartEndHours(8);
-  const morningDeliveryData = calculateAllWarehouseDelivery(
+  const { start: previousShiftStart, end: previousShiftEnd } =
+    getPreviousShiftStartEndHours(currentHour);
+  const previousShiftData = calculateAllWarehouseDelivery(
     plsData,
     wmsData,
-    morningShiftStart,
-    morningShiftEnd
+    previousShiftStart,
+    previousShiftEnd
   );
-  const morningShiftDeliveryData = {
-    time_range: `${getTimeByHour(morningShiftStart)}-${getTimeByHour(
-      morningShiftEnd
+  const previousShiftDeliveryData = {
+    time_range: `${getTimeByHour(previousShiftStart)}-${getTimeByHour(
+      previousShiftEnd
     )}`,
-    ...morningDeliveryData,
+    ...previousShiftData,
   };
 
   const previousData = calculateAllWarehouseDelivery(
@@ -212,7 +213,7 @@ app.get("/warehouse-progress", async (request, response) => {
     currentDeliveryData: currentDeliveryData,
     nextDeliveryData: nextDeliveryData,
     allDeliveryData: allDeliveryData,
-    morningDeliveryData: morningShiftDeliveryData,
+    previousShiftDeliveryData: previousShiftDeliveryData,
   });
 });
 
