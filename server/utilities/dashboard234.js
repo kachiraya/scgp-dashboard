@@ -37,7 +37,7 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
   const fGConveyor = plsData.filter((record) => {
     if (!record.User_Create_Date) return false;
     const wareHouseTime = new Date(record.User_Create_Date);
-    const createTime = wareHouseTime.getUTCHours() + 1;
+    const createTime = wareHouseTime.getUTCHours() + 2;
 
     return (
       createTime >= start &&
@@ -49,7 +49,7 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
   const fGDummy = plsData.filter((record) => {
     if (!record.User_Create_Date) return false;
     const wareHouseTime = new Date(record.User_Create_Date);
-    const createTime = wareHouseTime.getUTCHours() + 1;
+    const createTime = wareHouseTime.getUTCHours() + 2;
     return (
       createTime >= start &&
       createTime < end &&
@@ -60,7 +60,7 @@ export const calculateAllWarehouseDelivery = (plsData, wmsData, start, end) => {
   const fGExport = plsData.filter((record) => {
     if (!record.User_Create_Date) return false;
     const wareHouseTime = new Date(record.User_Create_Date);
-    const createTime = wareHouseTime.getUTCHours() + 1;
+    const createTime = wareHouseTime.getUTCHours() + 2;
     return (
       createTime >= start &&
       createTime < end &&
