@@ -22,14 +22,14 @@ const DisplayDataTable = ({ deliveryData, isAllDelivery, showPlanOnly, minWidth 
           width={"100%"}
           height={"6vh"}
           backgroundColor="scgGray.gray2"
-          fontSize={20}
+          fontSize={24}
         />
         <DisplayDataBox
           data={deliveryData?.fg.total_count ?? 0}
           width={"100%"}
           height={"6vh"}
           backgroundColor="scgOrange.orange2"
-          fontSize={20}
+          fontSize={24}
         />
 
         {/* area */}
@@ -39,7 +39,7 @@ const DisplayDataTable = ({ deliveryData, isAllDelivery, showPlanOnly, minWidth 
             flex={1}
             height={"6vh"}
             backgroundColor="scgGray.gray2"
-            fontSize={12}
+            fontSize={20}
           />
           {!showPlanOnly && (
             <>
@@ -49,7 +49,7 @@ const DisplayDataTable = ({ deliveryData, isAllDelivery, showPlanOnly, minWidth 
                 flex={1}
                 height={"6vh"}
                 backgroundColor="scgGray.gray2"
-                fontSize={12}
+                fontSize={20}
               />
               <DisplayDataBox
                 data="Remaining"
@@ -57,7 +57,7 @@ const DisplayDataTable = ({ deliveryData, isAllDelivery, showPlanOnly, minWidth 
                 // width={68}
                 height={"6vh"}
                 backgroundColor="scgGray.gray2"
-                fontSize={12}
+                fontSize={20}
               />
             </>
           )}
@@ -69,24 +69,24 @@ const DisplayDataTable = ({ deliveryData, isAllDelivery, showPlanOnly, minWidth 
           <DisplayDataBox
             data={deliveryData?.fg?.conveyor ?? 0}
             backgroundColor="scgBlue.blue2"
-            // height={65}
-            height={"7vh"}
+            height="100%"
+            minHeight={"7vh"}
             // width={68}
             flex={1}
             color="#DCEDDD"
-            fontSize={18}
+            fontSize={24}
           />
           {!showPlanOnly && (
             <>
               <Stack flex={1} justifyContent="space-between">
                 <DisplayDataBox
                   data={deliveryData?.doing?.conveyor ?? 0}
-                  // width={68}
+                  width="100%"
                   flex={1}
                   height={32}
                   backgroundColor={"scgGreen.green2"}
                   color="#DCEDDD"
-                  fontSize={18}
+                  fontSize={24}
                 />
                 <DisplayDataBox
                   data={deliveryData?.doing?.conveyor_dummy ?? 0}
@@ -95,18 +95,18 @@ const DisplayDataTable = ({ deliveryData, isAllDelivery, showPlanOnly, minWidth 
                   height={32}
                   backgroundColor={"scgGreen.green2"}
                   color="#DCEDDD"
-                  fontSize={18}
+                  fontSize={24}
                 />
               </Stack>
               <DisplayDataBox
                 data={deliveryData?.remaining?.conveyor ?? 0}
                 backgroundColor="scgRed.red2"
-                // height={65}
-                height={"7vh"}
+                height="100%"
+                minHeight={"7vh"}
                 // width={68}
                 flex={1}
                 color="#DCEDDD"
-                fontSize={18}
+                fontSize={24}
               />
             </>
           )}
@@ -122,7 +122,7 @@ const DisplayDataTable = ({ deliveryData, isAllDelivery, showPlanOnly, minWidth 
             // height={44}
             height={"6vh"}
             color="#DCEDDD"
-            fontSize={18}
+            fontSize={24}
           />
           {!showPlanOnly && (
             <>
@@ -133,7 +133,7 @@ const DisplayDataTable = ({ deliveryData, isAllDelivery, showPlanOnly, minWidth 
                 // height={44}
                 height={"6vh"}
                 color="#DCEDDD"
-                fontSize={18}
+                fontSize={24}
               />
               <DisplayDataBox
                 data={deliveryData?.remaining?.dummy ?? 0}
@@ -142,7 +142,7 @@ const DisplayDataTable = ({ deliveryData, isAllDelivery, showPlanOnly, minWidth 
                 // height={44}
                 height={"6vh"}
                 color="#DCEDDD"
-                fontSize={18}
+                fontSize={24}
               />
             </>
           )}
@@ -158,7 +158,7 @@ const DisplayDataTable = ({ deliveryData, isAllDelivery, showPlanOnly, minWidth 
             // height={44}
             height={"6vh"}
             color="#DCEDDD"
-            fontSize={18}
+            fontSize={24}
           />
           {!showPlanOnly && (
             <>
@@ -169,7 +169,7 @@ const DisplayDataTable = ({ deliveryData, isAllDelivery, showPlanOnly, minWidth 
                 // height={44}
                 height={"6vh"}
                 color="#DCEDDD"
-                fontSize={18}
+                fontSize={24}
               />
               <DisplayDataBox
                 data={deliveryData?.remaining?.export ?? 0}
@@ -178,7 +178,7 @@ const DisplayDataTable = ({ deliveryData, isAllDelivery, showPlanOnly, minWidth 
                 // height={44}
                 height={"6vh"}
                 color="#DCEDDD"
-                fontSize={18}
+                fontSize={24}
               />
             </>
           )}

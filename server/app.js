@@ -46,74 +46,87 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.get("/lms-data", (request, response) => {
+app.use((err, req, res, next) => {
+  // eslint-disable-line no-unused-vars
+  return res.status(err.status || 500).json({
+    error: {
+      message: err.message,
+      error: {},
+    },
+    status: false,
+  });
+});
+
+app.get("/lms-data", async (request, response) => {
   var request = new database.Request();
 
   // query to the database and get the records
-  request.query("select * from V_LMSDATA", function (err, records) {
-    if (err) console.log(err);
-    // console.log(records);
-    if (!records) {
-      console.log("Cannot retrieve LMS records");
-      return;
-    }
+  const [lmsTableData, taskAssignTableData] = await Promise.all([
+    request.query("select * from V_LMSDATA"),
+    // Task Assign
+    request.query("select * from V_TaskAssign"),
+  ]);
 
-    const data = records?.recordset ?? [];
-    const averageSetupTime = getAverageSetupTime(data);
-    const todayLMSData = data.filter(
-      (record) => record.SHIPMENTDATE && isToday(record.SHIPMENTDATE)
-    );
-    const uniqueLMSData = [
-      ...new Map(todayLMSData.map((item) => [item.SHIPMENTNO, item])).values(),
-    ];
+  const data = lmsTableData?.recordset ?? [];
+  const taskAssignData = taskAssignTableData?.recordset ?? [];
+  const averageSetupTime = getAverageSetupTime(data);
+  const todayLMSData = data.filter(
+    (record) => record.SHIPMENTDATE && isToday(record.SHIPMENTDATE)
+  );
+  const uniqueLMSData = [
+    ...new Map(todayLMSData.map((item) => [item.SHIPMENTNO, item])).values(),
+  ];
 
-    const lmsData = uniqueLMSData.map((record) => {
-      const finishTime = record.FINISHPICKING
-        ? formatDateToTimeStr(record.FINISHPICKING)
-        : getEstimatedTimeStr(
-            record.STARTPICKING_DATE,
-            averageSetupTime[record.TRUCKTYPE]
-          );
-      return {
-        id: `${record.SHIPMENTNO}-${record.DPNO}`,
-        truck_id: record.TRUCKID,
-        shipment_no: record.SHIPMENTNO,
-        truck_wait_time: formatDateToTimeStr(record.TIMESTATUS2_4),
-        picking_date: {
-          start: formatDateToTimeStr(record.STARTPICKING_DATE),
-          estimate_finish: finishTime,
-        },
-        status: getStatus(
+  const lmsData = uniqueLMSData.map((record) => {
+    const finishTime = record.FINISHPICKING
+      ? formatDateToTimeStr(record.FINISHPICKING)
+      : getEstimatedTimeStr(
           record.STARTPICKING_DATE,
-          record.FINISHPICKING,
-          record.Time_arriveWH,
-          record.Time_exitWH
-        ),
-        location: `A${record.LOCATION_ID}`,
-      };
-    });
+          averageSetupTime[record.TRUCKTYPE]
+        );
 
-    const processingLMSData = lmsData.filter((record) => {
-      return record.status !== status.COMPLETED;
-    });
-    const completedLMSData = lmsData.filter((record) => {
-      return record.status === status.COMPLETED;
-    });
-    const warehouseLMSData =
-      processingLMSData > 10
-        ? processingLMSData.slice(0, 10)
-        : completedLMSData
-            .slice(
-              completedLMSData.length - (10 - processingLMSData.length),
-              completedLMSData.length
-            )
-            .concat(processingLMSData);
-    // const warehouseLMSData =
-    //   lmsData.length > 10
-    //     ? lmsData.slice(lmsData.length - 10, lmsData.length)
-    //     : lmsData;
-    response.json({ count: lmsData.length, lmsData: warehouseLMSData });
+    const taskAssign = taskAssignData.find(
+      (taRecord) => taRecord.ShipmentNo === record.SHIPMENTNO
+    );
+    return {
+      id: `${record.SHIPMENTNO}-${record.DPNO}`,
+      truck_id: record.TRUCKID,
+      shipment_no: record.SHIPMENTNO,
+      truck_wait_time: formatDateToTimeStr(record.TIMESTATUS2_4),
+      picking_date: {
+        start: formatDateToTimeStr(record.STARTPICKING_DATE),
+        estimate_finish: finishTime,
+      },
+      status: getStatus(
+        record.STARTPICKING_DATE,
+        record.FINISHPICKING,
+        record.Time_arriveWH,
+        record.Time_exitWH
+      ),
+      location: taskAssign?.Area,
+    };
   });
+
+  const processingLMSData = lmsData.filter((record) => {
+    return record.status !== status.COMPLETED;
+  });
+  const completedLMSData = lmsData.filter((record) => {
+    return record.status === status.COMPLETED;
+  });
+  const warehouseLMSData =
+    processingLMSData > 10
+      ? processingLMSData.slice(0, 10)
+      : completedLMSData
+          .slice(
+            completedLMSData.length - (10 - processingLMSData.length),
+            completedLMSData.length
+          )
+          .concat(processingLMSData);
+  // const warehouseLMSData =
+  //   lmsData.length > 10
+  //     ? lmsData.slice(lmsData.length - 10, lmsData.length)
+  //     : lmsData;
+  response.json({ count: lmsData.length, lmsData: warehouseLMSData });
 });
 
 app.get("/warehouse-progress", async (request, response) => {
@@ -261,6 +274,7 @@ app.get("/task-assign-data", async (request, response) => {
   ]);
 
   const data = lmsTableData?.recordset ?? [];
+  const taskAssignData = taskAssignTableData?.recordset ?? [];
   const averageSetupTime = getAverageSetupTime(data);
   const todayLMSData = data.filter(
     (record) => record.SHIPMENTDATE && isToday(record.SHIPMENTDATE)
@@ -276,6 +290,9 @@ app.get("/task-assign-data", async (request, response) => {
           record.STARTPICKING_DATE,
           averageSetupTime[record.TRUCKTYPE]
         );
+    const taskAssign = taskAssignData.find(
+      (taRecord) => taRecord.ShipmentNo === record.SHIPMENTNO
+    );
     return {
       id: `${record.SHIPMENTNO}-${record.DPNO}`,
       truck_id: record.TRUCKID,
@@ -291,7 +308,7 @@ app.get("/task-assign-data", async (request, response) => {
         record.Time_arriveWH,
         record.Time_exitWH
       ),
-      location: `A${record.LOCATION_ID}`,
+      location: taskAssign?.Area,
     };
   });
 
@@ -311,29 +328,28 @@ app.get("/task-assign-data", async (request, response) => {
           )
           .concat(processingLMSData);
 
-  const taskAssignData = taskAssignTableData?.recordset ?? [];
   const taskAssignList = warehouseLMSData.map((record) => {
     let taskAssignRecords = taskAssignData.reduce((prev, curr) => {
       if (curr.ShipmentNo === record.shipment_no) {
         const status =
-        curr.Status === "MIX" || prev.sloc === "MIX"
-            ? "MIX"
-            : curr.Status;
-        const pickupLocation = curr.GI_Conveyor && prev.pickup_location
-          ? [prev.pickup_location, curr.GI_Conveyor].join("+")
-          : curr.GI_Conveyor;
+          curr.Status === "MIX" || prev.sloc === "MIX" ? "MIX" : curr.Status;
+        const pickupLocation =
+          curr.GI_Conveyor && prev.pickup_location
+            ? [prev.pickup_location, curr.GI_Conveyor].join("+")
+            : curr.GI_Conveyor;
         return {
           shipment_no: curr.ShipmentNo,
           forkLift_no: curr.CarCode,
           sloc: status,
           pickup_location: pickupLocation,
+          location: curr.Area,
         };
       }
       return prev;
     }, {});
 
     if (taskAssignRecords.sloc === "MIX") {
-      taskAssignRecords.pickup_location = `${taskAssignRecords.pickup_location}+Dummy`
+      taskAssignRecords.pickup_location = `${taskAssignRecords.pickup_location}+Dummy`;
     }
     return { ...record, ...taskAssignRecords };
   });
